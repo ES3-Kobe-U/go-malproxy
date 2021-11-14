@@ -8,14 +8,36 @@ import (
 
 func main() {
 	//ルート証明書を外部コマンドで実行させる。
-	cmd := exec.Command("sudo", "mkdir", "/usr/local/share/ca-certificates/extra")
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
+	cmdMkdir := exec.Command("sudo", "mkdir", "/usr/local/share/ca-certificates/extra")
+	cmdMkdir.Stderr = os.Stderr
+	cmdMkdir.Stdin = os.Stdin
 
-	out, err := cmd.Output()
+	out, err := cmdMkdir.Output()
 	if err != nil {
 		fmt.Println("Err", err)
 	} else {
-		fmt.Println("make", string(out))
+		fmt.Println("mkdir", string(out))
+	}
+
+	cmdCp := exec.Command("sudo", "cp", "foo.crt", "/usr/local/share/ca-certificates/extra/foo.crt")
+	cmdCp.Stderr = os.Stderr
+	cmdCp.Stdin = os.Stdin
+
+	out, err = cmdCp.Output()
+	if err != nil {
+		fmt.Println("Err", err)
+	} else {
+		fmt.Println("cp", string(out))
+	}
+
+	cmdDpkg := exec.Command("sudo", "update-ca-certificates")
+	cmdDpkg.Stderr = os.Stderr
+	cmdDpkg.Stdin = os.Stdin
+
+	out, err = cmdDpkg.Output()
+	if err != nil {
+		fmt.Println("Err", err)
+	} else {
+		fmt.Println("update", string(out))
 	}
 }
