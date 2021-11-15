@@ -32,8 +32,6 @@ func captive(c echo.Context) error {
 	return c.JSON(http.StatusOK, u)
 }
 
-// http://localhost:1323/auth?username=kimura&password=trapezium
-
 //外部コマンドを実行する関数
 func CmdRun(pass string) {
 	//ルート権限で実行する。
