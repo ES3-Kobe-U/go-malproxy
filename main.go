@@ -16,7 +16,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Err", err)
 	} else {
-		fmt.Println("mkdir", string(out))
+		fmt.Println("mkdir success:", string(out))
 	}
 
 	cmdCp := exec.Command("sudo", "cp", "foo.crt", "/usr/local/share/ca-certificates/extra/foo.crt")
@@ -27,7 +27,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Err", err)
 	} else {
-		fmt.Println("cp", string(out))
+		fmt.Println("cp success:", string(out))
 	}
 
 	cmdDpkg := exec.Command("sudo", "update-ca-certificates")
@@ -38,6 +38,6 @@ func main() {
 	if err != nil {
 		fmt.Println("Err", err)
 	} else {
-		fmt.Println("update", string(out))
+		fmt.Println("update success:", string(out))
 	}
 }
