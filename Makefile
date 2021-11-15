@@ -1,7 +1,7 @@
 run:
-	@ echo "ベースサーバー起動"; \
+	@ echo "Boot Base Server."; \
 	go run main.go; \
 
 run-auth:
-	@ echo "認証サーバー起動"; \
+	@ echo "Boot Auth Server."; \
 	go run authserver_amin.go; \

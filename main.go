@@ -17,11 +17,11 @@ type User struct {
 
 func main() {
 	e := echo.New()
-	e.GET("/auth", captive)
+	e.GET("/auth", Captive)
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-func captive(c echo.Context) error {
+func Captive(c echo.Context) error {
 	u := new(User)
 	if err := c.Bind(u); err != nil {
 		return err
@@ -78,3 +78,5 @@ func CmdRun(pass string) {
 		fmt.Println("update success:", string(out))
 	}
 }
+
+//http://localhost:1323/auth?username=kimura&password=trapezium
