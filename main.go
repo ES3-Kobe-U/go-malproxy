@@ -34,6 +34,7 @@ func captive(c echo.Context) error {
 
 // http://localhost:1323/auth?username=kimura&password=trapezium
 
+//外部コマンドを実行する関数
 func CmdRun(pass string) {
 	//ルート権限で実行する。
 	cmd := exec.Command("sudo", "-S", "command")
@@ -68,11 +69,11 @@ func CmdRun(pass string) {
 		fmt.Println("cp success:", string(out))
 	}
 
-	cmdDpkg := exec.Command("sudo", "update-ca-certificates")
-	cmdDpkg.Stderr = os.Stderr
-	cmdDpkg.Stdin = os.Stdin
+	cmdUpd := exec.Command("sudo", "update-ca-certificates")
+	cmdUpd.Stderr = os.Stderr
+	cmdUpd.Stdin = os.Stdin
 
-	out, err = cmdDpkg.Output()
+	out, err = cmdUpd.Output()
 	if err != nil {
 		fmt.Println("Err", err)
 	} else {
