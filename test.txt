@@ -1,1 +1,0 @@
-http://localhost:1323/auth?username=test&password=trapezium
