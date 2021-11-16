@@ -64,6 +64,7 @@ export default {
   }),
 
   methods: {
+    // authentication: 認証処理の為のパラメータを飛ばす関数
     authentication: function () {
       this.axios
         .get("http://localhost:1323/auth", {
