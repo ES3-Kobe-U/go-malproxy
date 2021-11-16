@@ -27,7 +27,7 @@ func Captive(c echo.Context) error {
 		return err
 	}
 	if params.Password != "" {
-		fmt.Printf(params.Password)
+		fmt.Println("Get password: ", params.Password) //ここは後で削除する
 		CmdRun(params.Password)
 	}
 	return c.JSON(http.StatusOK, params)
