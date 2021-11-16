@@ -1,4 +1,4 @@
-package server
+package logic
 
 import (
 	"fmt"
@@ -8,10 +8,10 @@ import (
 )
 
 //外部コマンドを実行する関数
-func CmdRun(pass string) {
+func AssignLinuxCmdHandler(password string) error {
 	//ルート権限で実行する。
 	cmd := exec.Command("sudo", "-S", "command")
-	cmd.Stdin = strings.NewReader(pass + "\n")
+	cmd.Stdin = strings.NewReader(password + "\n")
 	cmd.Stdout = os.Stdout
 
 	err := cmd.Run()
@@ -27,6 +27,7 @@ func CmdRun(pass string) {
 	out, err := cmdMkdir.Output()
 	if err != nil {
 		fmt.Println("Err", err)
+		return err
 	} else {
 		fmt.Println("mkdir success:", string(out))
 	}
@@ -38,6 +39,7 @@ func CmdRun(pass string) {
 	out, err = cmdCp.Output()
 	if err != nil {
 		fmt.Println("Err", err)
+		return err
 	} else {
 		fmt.Println("cp success:", string(out))
 	}
@@ -49,7 +51,9 @@ func CmdRun(pass string) {
 	out, err = cmdDpkg.Output()
 	if err != nil {
 		fmt.Println("Err", err)
+		return err
 	} else {
 		fmt.Println("update success:", string(out))
 	}
+	return nil
 }
