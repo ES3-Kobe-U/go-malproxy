@@ -16,7 +16,7 @@
           <p class="text-14 mb-1">Username</p>
           <v-text-field
             placeholder="Input your account name"
-            v-model="email"
+            v-model="username"
             outlined
             dense
             hide-details=""
@@ -38,7 +38,7 @@
 
         <div class="mb-4">
           <v-btn
-            @click="signin"
+            @click="authentication"
             block
             color="primary"
             class="text-capitalize font-600"
@@ -59,58 +59,25 @@ export default {
   name: "HelloWorld",
 
   data: () => ({
-    errorMessages: "",
-    name: null,
-    address: null,
-    city: null,
-    state: null,
-    zip: null,
-    country: null,
-    formHasErrors: false,
+    username: null,
+    password: null,
   }),
 
-  computed: {
-    form() {
-      return {
-        name: this.name,
-        address: this.address,
-        city: this.city,
-        state: this.state,
-        zip: this.zip,
-        country: this.country,
-      };
-    },
-  },
-
-  watch: {
-    name() {
-      this.errorMessages = "";
-    },
-  },
-
   methods: {
-    addressCheck() {
-      this.errorMessages =
-        this.address && !this.name ? `Hey! I'm required` : "";
-
-      return true;
-    },
-    resetForm() {
-      this.errorMessages = [];
-      this.formHasErrors = false;
-
-      Object.keys(this.form).forEach((f) => {
-        this.$refs[f].reset();
-      });
-    },
-    submit() {
-      this.formHasErrors = false;
-
-      Object.keys(this.form).forEach((f) => {
-        if (!this.form[f]) this.formHasErrors = true;
-
-        this.$refs[f].validate(true);
-      });
+    authentication: function () {
+      this.axios
+        .get("http://localhost:1323/auth", {
+          params: {
+            username: this.username,
+            password: this.password,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

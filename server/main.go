@@ -10,26 +10,27 @@ import (
 	"github.com/labstack/echo"
 )
 
-type User struct {
+type UserParams struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
 func main() {
 	e := echo.New()
-	e.GET("/auth", captive)
+	e.GET("/auth", Captive)
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-func captive(c echo.Context) error {
-	u := new(User)
-	if err := c.Bind(u); err != nil {
+func Captive(c echo.Context) error {
+	params := new(UserParams)
+	if err := c.Bind(params); err != nil {
 		return err
 	}
-	if u.Password != "" {
-		CmdRun(u.Password)
+	if params.Password != "" {
+		fmt.Println("Get password: ", params.Password) //ここは後で削除する
+		CmdRun(params.Password)
 	}
-	return c.JSON(http.StatusOK, u)
+	return c.JSON(http.StatusOK, params)
 }
 
 //外部コマンドを実行する関数
@@ -78,3 +79,5 @@ func CmdRun(pass string) {
 		fmt.Println("update success:", string(out))
 	}
 }
+
+//http://localhost:1323/auth?username=kimura&password=trapezium
