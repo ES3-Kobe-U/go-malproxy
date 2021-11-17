@@ -15,7 +15,6 @@ func AssignLinuxAuthHander(c echo.Context) error {
 		return err
 	}
 	if params.Password != "" {
-		fmt.Println("Get password: ", params.Password) //ここは後で削除する
 		err := logic.AssignLinuxCmdHandler(params.Password)
 		if err != nil {
 			fmt.Println("Error :(")
