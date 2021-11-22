@@ -13,8 +13,8 @@ var HtmlFromHostnameTests = map[string]string{
 
 var TestCase []string = []string{
 	"rakuten.co.jp",
-	"golang.org",
-	"amazon.co.jp",
+	//"golang.org",
+	//"amazon.co.jp",
 }
 
 func TestGetHtmlFromHostname(t *testing.T) {
