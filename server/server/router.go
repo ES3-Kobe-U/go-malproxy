@@ -1,5 +1,9 @@
 package server
 
-// func Router(e *echo.Echo) {
-// 	e.GET("/hostname", handler.AssignIPDetectionHandler)
-// }
+import (
+	"github.com/labstack/echo"
+)
+
+func Router(e *echo.Echo) {
+
+}
