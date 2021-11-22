@@ -8,7 +8,6 @@ import (
 var hostnameFromIPTests = map[string]string{
 	"127.0.0.1": "localhost",
 	"8.8.4.4":   "dns.google.",
-	//"52.119.168.48": "amazon.co.jp",
 }
 
 func TestGetHostnameFromIPAddress(t *testing.T) {
