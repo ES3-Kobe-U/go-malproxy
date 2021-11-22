@@ -12,13 +12,13 @@ var hostnameFromIPTests = map[string]string{
 
 func TestGetHostnameFromIPAddress(t *testing.T) {
 	for ip, hn := range hostnameFromIPTests { // ipアドレスとホスト名の配列を探索
-		op, err := GetHostnameFromIPAddress(ip) // ipアドレスからホスト名を得る
+		res, err := GetHostnameFromIPAddress(ip) // ipアドレスからホスト名を得る
 		if err != nil {
 			t.Error(err)
 		}
 		judge := false // 判定
 		var key string // 実行結果から得られたホスト名
-		for _, key = range op {
+		for _, key = range res {
 			if key == hn {
 				fmt.Println("Passed :) => IP:", ip, "/Key:", key, "/Wanted:", hn)
 				judge = true
