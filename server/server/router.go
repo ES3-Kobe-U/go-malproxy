@@ -1,5 +1,6 @@
 package server
 
+
 import (
 	"github.com/labstack/echo"
 )
@@ -7,3 +8,4 @@ import (
 func Router(e *echo.Echo) {
 
 }
+
