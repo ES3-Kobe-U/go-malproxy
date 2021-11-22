@@ -13,6 +13,7 @@ var HtmlFromHostname = map[string]string{
 	"golang.org":    "http://golang.org/",
 }
 
+// 指定のURLのHTMLファイルを取得する関数
 func GetHtmlFromHostname(hostname string) {
 	url := HtmlFromHostname[hostname] // ホスト名からUPLを受け取る
 	fmt.Printf("HTML code of %s ...\n", url)
