@@ -1,8 +1,6 @@
 package server
 
-import (
-	"github.com/labstack/echo"
-)
+import "github.com/labstack/echo"
 
 func Run() {
 	e := echo.New()
