@@ -5,5 +5,5 @@ import "github.com/labstack/echo"
 func Run() {
 	e := echo.New()
 	Router(e) //router
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":8080"))
 }
