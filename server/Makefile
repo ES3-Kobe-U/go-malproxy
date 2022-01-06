@@ -1,6 +1,6 @@
 run:
-	@ echo "Boot Base Server."; \
-	go run main.go; \
+	@ echo Boot Base Server.
+	go run main.go
 
 all:
 	git add .
