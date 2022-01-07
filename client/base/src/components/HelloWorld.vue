@@ -41,7 +41,9 @@
                   ></v-text-field>
                 </div>
                 <div class="my-2">
-                  <v-btn block color="orange lighten-2"> ログイン </v-btn>
+                  <v-btn block color="orange lighten-2" v-on:click="login">
+                    ログイン
+                  </v-btn>
                 </div>
               </v-card-text>
             </v-form>
@@ -53,6 +55,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "HelloWorld",
   data() {
@@ -76,7 +80,25 @@ export default {
     validate() {
       this.$refs.form.validate();
     },
-    go() {},
+    login() {
+      console.log(this.email);
+      console.log(this.password);
+      axios
+        .get("login", {
+          params: {
+            Email: this.email,
+            Password: this.password,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
+
+<!-- mail@example.com testtest-->
