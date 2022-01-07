@@ -1,5 +1,5 @@
 run:
-	@echo フロントエンドを起動します
+	@echo ベースを起動します
 	npm run serve
 
 ui:
