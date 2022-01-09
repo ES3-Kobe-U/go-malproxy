@@ -11,14 +11,14 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-var Url = map[int]string{
+var URL = map[int]string{
 	1: "https://www.google.com/",
 	2: "https://www.amazon.co.jp/-/en/",
 }
 
 func TestDataExtraction(t *testing.T) {
 
-	for _, Url := range Url {
+	for _, Url := range URL {
 		doc, err := goquery.NewDocument(Url)
 		if err != nil {
 			fmt.Print("url scarapping failed")

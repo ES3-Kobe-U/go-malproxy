@@ -27,7 +27,7 @@ func DataExtraction(URL string) {
 		fmt.Print("dom get failed")
 	}
 
-	fileName := u.Hostname()
+	fileName := u.Hostname() //ファイル名はホスト名で統一（多分FQDNの形で返されるので、以後変数名はfqdnで統一したい）
 
 	ioutil.WriteFile("../../../client/base/src/test/"+fileName+".html", []byte(res), os.ModePerm)
 }
