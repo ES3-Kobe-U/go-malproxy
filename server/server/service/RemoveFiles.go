@@ -7,8 +7,8 @@ import (
 )
 
 //作成したHTMLファイルを削除する。
-func RemoveFile(fileName string) error {
-	cmdRemove := exec.Command("rm", "test/"+fileName+".html")
+func RemoveFile(fqdn string) error {
+	cmdRemove := exec.Command("rm", "test/"+fqdn+".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
 	cmdRemove.Stderr = os.Stderr
 	cmdRemove.Stdin = os.Stdin
 
