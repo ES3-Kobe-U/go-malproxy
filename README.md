@@ -2,7 +2,6 @@
 
 # 各層での設計
 ## フロント
----
 ### 使用言語
 [Vue.js](https://jp.vuejs.org/index.html)
 
@@ -13,7 +12,6 @@
 ### TODO
 
 ## バックエンド
----
 ### 使用言語
 [Golang](https://go.dev/)
 
