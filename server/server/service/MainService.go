@@ -40,6 +40,7 @@ func GoogleSearch(Word string) error {
 	URL := "https://www.google.com/search?q=" + query //Google検索のURLはこれで統一されているっぽい
 	err := DataExtraction(URL)
 	if err != nil {
+		log.Fatal(err)
 		return err
 	}
 	return nil
@@ -89,7 +90,7 @@ func DataExtraction(URL string) error {
 		return err
 	}
 	fileName := u.Hostname() //ファイル名はホスト名で統一（多分FQDNの形で返されるので、以後変数名はfqdnで統一したい）
-	err = ioutil.WriteFile("test/"+fileName+".html", []byte(res), os.ModePerm)
+	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/server/service/test/"+fileName+".html", []byte(res), os.ModePerm)
 	if err != nil {
 		return err
 	}
