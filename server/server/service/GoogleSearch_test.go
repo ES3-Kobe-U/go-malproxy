@@ -1,21 +1,58 @@
 package service
 
 import (
+	"fmt"
 	"log"
 	"testing"
 )
 
-var Word = map[int]string{
-	1: "神戸大学",
-	2: "神戸 大学",
-	3: "神戸　大学",
-	4: "KobeUniv.",
-	5: "Kobe Univ.",
-	6: "Kobe　Univ.",
+var WordList_Sample1 = []string{
+	"神戸大学",
+	"神戸 大学",
+	"神戸　大学",
+	"KobeUniv.",
+	"Kobe Univ.",
+	"Kobe　Univ.",
+}
+
+var WordList_Sample2 = []string{
+	"神戸大学",
+	"神戸 大学",
+	"神戸　大学",
+	"KobeUniv.",
+	"Kobe Univ.",
+	"Kobe　Univ.",
+	"神戸大学",
+	"神戸  大学",
+	"神戸　　大学",
+	"KobeUniv.",
+	"Kobe  Univ.",
+	"Kobe　　Univ.",
+}
+
+func TestMakeURL(t *testing.T) {
+	for _, word := range WordList_Sample2 {
+		var query string
+		cnt := 0
+		for _, char := range word {
+			if char == ' ' || char == '　' { //空文字列なら+に変換
+				cnt += 1
+				if cnt < 2 {
+					char = '+'
+					query = query + string(char)
+				}
+			} else {
+				cnt = 0
+				query = query + string(char)
+			}
+		}
+		URL := "https://google.com/search?q=" + query //Google検索のURLはこれで統一されているっぽい
+		fmt.Println(URL)
+	}
 }
 
 func TestGoogleSearch(t *testing.T) {
-	for _, word := range Word {
+	for _, word := range WordList_Sample1 {
 		err := GoogleSearch(word)
 		if err != nil {
 			log.Fatal(err)
