@@ -37,7 +37,7 @@ func GoogleSearch(Word string) error {
 			query = query + string(char)
 		}
 	}
-	URL := "https://google.com/search?q=" + query //Google検索のURLはこれで統一されているっぽい
+	URL := "https://www.google.com/search?q=" + query //Google検索のURLはこれで統一されているっぽい
 	err := DataExtraction(URL)
 	if err != nil {
 		return err
@@ -45,6 +45,7 @@ func GoogleSearch(Word string) error {
 	return nil
 }
 
+//データを読み込み&URLの書き換え
 func ReadDataAndRewiteURL(fqdn string) (string, error) {
 	data, err := ioutil.ReadFile("test/" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
 	if err != nil {
@@ -55,7 +56,7 @@ func ReadDataAndRewiteURL(fqdn string) (string, error) {
 	return rewrite, nil
 }
 
-//作成したHTMLファイルを削除する。
+//作成したHTMLファイルの削除
 func RemoveFile(fqdn string) error {
 	cmdRemove := exec.Command("rm", "test/"+fqdn+".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
 	cmdRemove.Stderr = os.Stderr
@@ -70,7 +71,7 @@ func RemoveFile(fqdn string) error {
 	return nil
 }
 
-//URLからHTMLファイルを取得&自動生成
+//URLからHTMLファイルの取得&自動生成
 func DataExtraction(URL string) error {
 	doc, err := goquery.NewDocument(URL)
 	if err != nil {
