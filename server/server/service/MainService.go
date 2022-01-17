@@ -21,7 +21,11 @@ func MainService(URL string) error {
 	return nil
 }
 
-// Google検索用のURLの作成処理
+/*
+GoogleSearch関数
+
+検索ワードを引数にとって、その検索結果のhtmlファイルを自動生成する。
+*/
 func GoogleSearch(Word string) error {
 	var query string
 	cnt := 0
@@ -46,7 +50,11 @@ func GoogleSearch(Word string) error {
 	return nil
 }
 
-//データを読み込み&URLの書き換え
+/*
+ReadDataAndRewiteURL関数
+
+FQDNを引数にとって、FQDN.htmlファイル内にある"https://"を"http://go-malproxy/"に置き換え、その結果を文字列として返す。
+*/
 func ReadDataAndRewiteURL(fqdn string) (string, error) {
 	data, err := ioutil.ReadFile("test/" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
 	if err != nil {
@@ -57,7 +65,11 @@ func ReadDataAndRewiteURL(fqdn string) (string, error) {
 	return rewrite, nil
 }
 
-//作成したHTMLファイルの削除
+/*
+RemoveFile関数
+
+FQDNを引数にとって、FQDN.htmlを外部コマンドで削除する。
+*/
 func RemoveFile(fqdn string) error {
 	cmdRemove := exec.Command("rm", "test/"+fqdn+".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
 	cmdRemove.Stderr = os.Stderr
@@ -72,7 +84,11 @@ func RemoveFile(fqdn string) error {
 	return nil
 }
 
-//URLからHTMLファイルの取得&自動生成
+/*
+DataExtraction関数
+
+実際の正規URLを引数にとって、htmlファイルを自動生成する。
+*/
 func DataExtraction(URL string) error {
 	doc, err := goquery.NewDocument(URL)
 	if err != nil {
