@@ -21,7 +21,7 @@ var t = &Template{
 }
 
 func InitRouter(e *echo.Echo) {
-	e.GET("/", handler.AssignMainHandler)
+	e.GET("/", handler.AssignIndexHandler)
 	e.GET("/login", handler.AssignPostLoginData)
 	e.GET("google-search/", handler.AssignGoogleSearchHandler)
 }
