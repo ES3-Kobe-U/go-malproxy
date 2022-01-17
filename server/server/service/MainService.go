@@ -52,8 +52,8 @@ func ReadDataAndRewiteURL(fqdn string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	res := string(data)                                                        //データを文字列に変換
-	rewrite := strings.Replace(res, "https://"+fqdn, "http://go-malproxy", -1) //文字列の置き換え
+	res := string(data)                                                    //データを文字列に変換
+	rewrite := strings.Replace(res, "https://", "http://go-malproxy/", -1) //文字列の置き換え
 	return rewrite, nil
 }
 
