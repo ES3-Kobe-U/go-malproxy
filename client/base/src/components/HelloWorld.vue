@@ -83,11 +83,10 @@ export default {
     login() {
       console.log(this.email);
       console.log(this.password);
-      axios
-        .get("login", {
+      axios.get("http://localhost:1323/login", {
           params: {
-            Email: this.email,
-            Password: this.password,
+            email: this.email,
+            password: this.password,
           },
         })
         .then((res) => {
