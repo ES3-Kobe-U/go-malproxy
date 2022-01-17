@@ -6,6 +6,6 @@ import (
 )
 
 func Router(e *echo.Echo) {
-	e.GET("/login", handler.AssignPostLoginData)
-	e.GET("/google-search", handler.AssignGoogleSearchHandler)
+	e.POST("api/v1/login", handler.AssignPostLoginData)
+	e.GET("google-search/", handler.AssignGoogleSearchHandler)
 }
