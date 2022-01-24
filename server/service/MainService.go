@@ -13,18 +13,16 @@ import (
 )
 
 func MainService(URL string) error {
-	//1. 叩いたURLの取得
-	//2. ルールに従って、URLを正規のものに戻す
+	//1. ルールに従って、URLを正規のものに戻す
 	NewURL := strings.Replace(URL, "https://mitm.es3/", "https://", -1)
-	fmt.Println(NewURL) // 出力
 
-	//3. 正規URLで正規サーバーにアクセスし、返ってきたデータをHTMLファイルにして出力
+	//2. 正規URLで正規サーバーにアクセスし、返ってきたデータをHTMLファイルにして出力
 	err := DataExtraction(NewURL)
 	if err != nil {
 		return err
 	}
 
-	//4. ルールに従って、URLを偽物のものに戻し、HTMLファイルとしてユーザーに返し、
+	//3. ルールに従って、URLを偽物のものに戻し、HTMLファイルとしてユーザーに返却
 	u, err := url.Parse(NewURL)
 	if err != nil {
 		return err
