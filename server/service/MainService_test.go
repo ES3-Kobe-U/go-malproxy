@@ -12,8 +12,20 @@ import (
 	"testing"
 )
 
-func TestMainService(t *testing.T) {
+var ListOfURL = []string{
+	"https://mitm.es3/amazon.co.jp/",
+	"https://mitm.es3/github.com/marketplace/circleci",
+	"https://mitm.es3/hub.docker.com/search?type=image",
+	"https://mitm.es3/qiita.com/official-events/5cb794f7cb9ac194ed70",
+}
 
+func TestMainService(t *testing.T) {
+	for i := range ListOfURL {
+		err := MainService(ListOfURL[i])
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
 // var GoogleSearch_Sample1 = []string{

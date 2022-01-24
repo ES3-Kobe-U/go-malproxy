@@ -15,9 +15,26 @@ import (
 func MainService(URL string) error {
 	//1. 叩いたURLの取得
 	//2. ルールに従って、URLを正規のものに戻す
-	//3. 正規URLで正規サーバーにアクセスし、帰ってきたデータをHTMLファイルにして出力
-	//4. ルールに従って、URLを偽物のものに戻す
-	//5. 偽物のURLに変換したデータをHTMLファイルとしてユーザーに返す。
+	NewURL := strings.Replace(URL, "https://mitm.es3/", "https://", -1)
+	fmt.Println(NewURL) // 出力
+
+	//3. 正規URLで正規サーバーにアクセスし、返ってきたデータをHTMLファイルにして出力
+	err := DataExtraction(NewURL)
+	if err != nil {
+		return err
+	}
+
+	//4. ルールに従って、URLを偽物のものに戻し、HTMLファイルとしてユーザーに返し、
+	u, err := url.Parse(NewURL)
+	if err != nil {
+		return err
+	}
+	fqdn := u.Hostname()
+	_, err = ReadDataAndRewiteURL(fqdn)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -53,7 +70,7 @@ func GoogleSearch(Word string) error {
 /*
 ReadDataAndRewiteURL関数
 
-FQDNを引数にとって、FQDN.htmlファイル内にある"https://"を"http://go-malproxy/"に置き換え、その結果を文字列として返す。
+FQDNを引数にとって、FQDN.htmlファイル内にある"https://"を"http://mitm.es3/"に置き換え、その結果を文字列として返す。
 */
 func ReadDataAndRewiteURL(fqdn string) (string, error) {
 	data, err := ioutil.ReadFile("/home/kimura/go-malproxy/server/templates/" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
@@ -61,16 +78,20 @@ func ReadDataAndRewiteURL(fqdn string) (string, error) {
 		return "", err
 	}
 	res := string(data) //データを文字列に変換
-	//m := map[string]int{}                                                          //urlのパターンをマップで管理
 	r, err := regexp.Compile("https://(.*)")
 	if err != nil {
 		log.Fatal(err)
 	}
 	links := r.FindAllString(res, -1)
 	for i := 0; i < len(links); i++ {
-		fmt.Println(links[i])
+		fmt.Println("\x1b[34m 抜き出したURL---> \x1b[0m", links[i])
 	}
-	rewrite := strings.Replace(res, "https://(*)/", "http://localhost:1323/", -1) //文字列の置き換え
+	rewrite := strings.Replace(res, "https://", "https://mitm.es3/", -1) //文字列の置き換え
+	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rewrite), os.ModePerm)
+	if err != nil {
+		return "", err
+	}
+	fmt.Println("\x1b[35m 書き換え結果---> \x1b[0m", rewrite)
 	return rewrite, nil
 }
 
@@ -99,38 +120,24 @@ DataExtraction関数
 実際の正規URLを引数にとって、htmlファイルを自動生成する。
 */
 func DataExtraction(URL string) error {
-	// doc, err := goquery.NewDocument(URL)
-	// if err != nil {
-	// 	fmt.Print("url scarapping failed")
-	// 	return err
-	// }
-	// url の指定
-	re, err := regexp.Compile("http(.*)://(.*)")
+	resp, _ := http.Get(URL) // net/http でのリクエストの発射
+	defer resp.Body.Close()
+	byteArray, _ := ioutil.ReadAll(resp.Body) // []byte でリクエストの中身を取得
+
+	re, err := regexp.Compile("https://(.*)") // パターンの指定
 	if err != nil {
 		return err
 	}
-	// net/http でのリクエストの発射
-	resp, _ := http.Get(URL)
-	defer resp.Body.Close()
-	// []byte でリクエストの中身を取得
-	byteArray, _ := ioutil.ReadAll(resp.Body)
-	// 正規表現にあったものを全てlinks に入れる
-	links := re.FindAllString(string(byteArray), -1)
+	links := re.FindAllString(string(byteArray), -1) // 正規表現にあったものを全てlinks に入れる
 	for i := 0; i < len(links); i++ {
-		fmt.Println(links[i])
+		fmt.Println("\x1b[31m 正規表現---> \x1b[0m", links[i])
 	}
+
 	u, err := url.Parse(URL)
 	if err != nil {
-		log.Fatal(err)
 		return err
 	}
-	// res, err := doc.Html()
-	// if err != nil {
-	// 	fmt.Print("dom get failed")
-	// 	return err
-	// }
 	fileName := u.Hostname() //ファイル名はホスト名で統一（多分FQDNの形で返されるので、以後変数名はfqdnで統一したい）
-	// err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/"+fileName+".html", []byte(res), os.ModePerm)
 	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/"+fileName+".html", byteArray, os.ModePerm)
 	if err != nil {
 		return err
