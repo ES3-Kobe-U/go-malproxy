@@ -89,7 +89,10 @@ DataExtraction関数
 実際の正規URLを引数にとって、htmlファイルを自動生成する。
 */
 func DataExtraction(URL string) error {
-	resp, _ := http.Get(URL) // net/http でのリクエストの発射
+	resp, err := http.Get(URL) // net/http でのリクエストの発射
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer resp.Body.Close()
 	byteArray, _ := ioutil.ReadAll(resp.Body) // []byte でリクエストの中身を取得
 

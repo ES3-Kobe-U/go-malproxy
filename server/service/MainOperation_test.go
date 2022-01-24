@@ -60,7 +60,10 @@ func TestRemoveFile(t *testing.T) {
 
 func TestDataExtraction(t *testing.T) {
 	for _, Url := range UrlList {
-		resp, _ := http.Get(Url)
+		resp, err := http.Get(Url)
+		if err != nil {
+			log.Fatal(err)
+		}
 		defer resp.Body.Close()
 		byteArray, _ := ioutil.ReadAll(resp.Body)
 		u, err := url.Parse(Url)
@@ -81,7 +84,10 @@ func TestGetURL(t *testing.T) {
 		if err != nil {
 			return
 		}
-		resp, _ := http.Get(Url) // net/http でのリクエストの発射
+		resp, err := http.Get(Url) // net/http でのリクエストの発射
+		if err != nil {
+			log.Fatal(err)
+		}
 		defer resp.Body.Close()
 		byteArray, _ := ioutil.ReadAll(resp.Body)        // []byte でリクエストの中身を取得
 		links := re.FindAllString(string(byteArray), -1) // 正規表現にあったものを全てlinks に入れる
@@ -100,7 +106,10 @@ func TestGetURLAndOutputHtml(t *testing.T) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		resp, _ := http.Get(Url)
+		resp, err := http.Get(Url)
+		if err != nil {
+			log.Fatal(err)
+		}
 		defer resp.Body.Close()
 		byteArray, _ := ioutil.ReadAll(resp.Body)
 		links := re.FindAllString(string(byteArray), -1)
