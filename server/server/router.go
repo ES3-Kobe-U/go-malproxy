@@ -25,3 +25,5 @@ func InitRouter(e *echo.Echo) {
 	e.GET("/login", handler.AssignPostLoginData)
 	e.GET("google-search/", handler.AssignGoogleSearchHandler)
 }
+
+// http://localhost:1323/

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"net/url"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
-
-	"github.com/PuerkitoBio/goquery"
 )
 
 func MainService(URL string) error {
@@ -21,7 +21,11 @@ func MainService(URL string) error {
 	return nil
 }
 
-// Google検索用のURLの作成処理
+/*
+GoogleSearch関数
+
+検索ワードを引数にとって、その検索結果のhtmlファイルを自動生成する。
+*/
 func GoogleSearch(Word string) error {
 	var query string
 	cnt := 0
@@ -46,18 +50,35 @@ func GoogleSearch(Word string) error {
 	return nil
 }
 
-//データを読み込み&URLの書き換え
+/*
+ReadDataAndRewiteURL関数
+
+FQDNを引数にとって、FQDN.htmlファイル内にある"https://"を"http://go-malproxy/"に置き換え、その結果を文字列として返す。
+*/
 func ReadDataAndRewiteURL(fqdn string) (string, error) {
-	data, err := ioutil.ReadFile("test/" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
+	data, err := ioutil.ReadFile("/home/kimura/go-malproxy/server/server/views/" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
 	if err != nil {
 		return "", err
 	}
-	res := string(data)                                                    //データを文字列に変換
-	rewrite := strings.Replace(res, "https://", "http://go-malproxy/", -1) //文字列の置き換え
+	res := string(data) //データを文字列に変換
+	//m := map[string]int{}                                                          //urlのパターンをマップで管理
+	r, err := regexp.Compile("https://(.*)")
+	if err != nil {
+		log.Fatal(err)
+	}
+	links := r.FindAllString(res, -1)
+	for i := 0; i < len(links); i++ {
+		fmt.Println(links[i])
+	}
+	rewrite := strings.Replace(res, "https://(*)/", "http://localhost:1323/", -1) //文字列の置き換え
 	return rewrite, nil
 }
 
-//作成したHTMLファイルの削除
+/*
+RemoveFile関数
+
+FQDNを引数にとって、FQDN.htmlを外部コマンドで削除する。
+*/
 func RemoveFile(fqdn string) error {
 	cmdRemove := exec.Command("rm", "test/"+fqdn+".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
 	cmdRemove.Stderr = os.Stderr
@@ -72,25 +93,45 @@ func RemoveFile(fqdn string) error {
 	return nil
 }
 
-//URLからHTMLファイルの取得&自動生成
+/*
+DataExtraction関数
+
+実際の正規URLを引数にとって、htmlファイルを自動生成する。
+*/
 func DataExtraction(URL string) error {
-	doc, err := goquery.NewDocument(URL)
+	// doc, err := goquery.NewDocument(URL)
+	// if err != nil {
+	// 	fmt.Print("url scarapping failed")
+	// 	return err
+	// }
+	// url の指定
+	re, err := regexp.Compile("http(.*)://(.*)")
 	if err != nil {
-		fmt.Print("url scarapping failed")
 		return err
+	}
+	// net/http でのリクエストの発射
+	resp, _ := http.Get(URL)
+	defer resp.Body.Close()
+	// []byte でリクエストの中身を取得
+	byteArray, _ := ioutil.ReadAll(resp.Body)
+	// 正規表現にあったものを全てlinks に入れる
+	links := re.FindAllString(string(byteArray), -1)
+	for i := 0; i < len(links); i++ {
+		fmt.Println(links[i])
 	}
 	u, err := url.Parse(URL)
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
-	res, err := doc.Html()
-	if err != nil {
-		fmt.Print("dom get failed")
-		return err
-	}
+	// res, err := doc.Html()
+	// if err != nil {
+	// 	fmt.Print("dom get failed")
+	// 	return err
+	// }
 	fileName := u.Hostname() //ファイル名はホスト名で統一（多分FQDNの形で返されるので、以後変数名はfqdnで統一したい）
-	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/server/service/test/"+fileName+".html", []byte(res), os.ModePerm)
+	// err = ioutil.WriteFile("/home/kimura/go-malproxy/server/server/views/"+fileName+".html", []byte(res), os.ModePerm)
+	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/server/views/"+fileName+".html", byteArray, os.ModePerm)
 	if err != nil {
 		return err
 	}
