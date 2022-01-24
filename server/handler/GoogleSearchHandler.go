@@ -12,7 +12,7 @@ type GoogleSearchParams struct {
 	Params string `json:"params"`
 }
 
-func AssignGoogleSearchHandler(c echo.Context) error {
+func GoogleSearchHandler(c echo.Context) error {
 	Query := new(GoogleSearchParams)
 	if err := c.Bind(Query); err != nil {
 		return err

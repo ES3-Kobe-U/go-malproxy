@@ -12,7 +12,7 @@ type LoginData struct {
 	Password string `json:"password"`
 }
 
-func AssignPostLoginData(c echo.Context) error {
+func PostLoginData(c echo.Context) error {
 	params := new(LoginData)
 	if err := c.Bind(params); err != nil {
 		return err

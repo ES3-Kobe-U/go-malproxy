@@ -6,6 +6,6 @@ import (
 	"github.com/labstack/echo"
 )
 
-func AssignIndexHandler(c echo.Context) error {
+func IndexHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "index", nil)
 }
