@@ -45,19 +45,6 @@ func TestReadDataAndRewiteURL(t *testing.T) {
 	}
 }
 
-func TestRemoveFile(t *testing.T) {
-	for _, Url := range UrlList {
-		u, err := url.Parse(Url)
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = RemoveFile(u.Hostname())
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-}
-
 func TestDataExtraction(t *testing.T) {
 	for _, Url := range UrlList {
 		resp, err := http.Get(Url)

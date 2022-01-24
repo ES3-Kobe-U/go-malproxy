@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"os/exec"
 	"regexp"
 	"strings"
 )
@@ -62,25 +61,6 @@ func ReadDataAndRewiteURL(fqdn string) (string, error) {
 	}
 	fmt.Println("\x1b[35m 書き換え結果---> \x1b[0m", rewrite)
 	return rewrite, nil
-}
-
-/*
-RemoveFile関数
-
-FQDNを引数にとって、FQDN.htmlを外部コマンドで削除する。
-*/
-func RemoveFile(fqdn string) error {
-	cmdRemove := exec.Command("rm", "test/"+fqdn+".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
-	cmdRemove.Stderr = os.Stderr
-	cmdRemove.Stdin = os.Stdin
-	out, err := cmdRemove.Output()
-	if err != nil {
-		log.Println("Err", err)
-		return err
-	} else {
-		log.Println("remove files --> success:", string(out))
-	}
-	return nil
 }
 
 /*
