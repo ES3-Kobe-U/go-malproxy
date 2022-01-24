@@ -17,7 +17,7 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 var t = &Template{
-	templates: template.Must(template.ParseGlob("/home/kimura/go-malproxy/server/server/views/*.html")),
+	templates: template.Must(template.ParseGlob("/home/kimura/go-malproxy/server/templates/*.html")),
 }
 
 func InitRouter(e *echo.Echo) {
