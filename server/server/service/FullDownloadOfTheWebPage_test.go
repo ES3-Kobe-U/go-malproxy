@@ -6,7 +6,7 @@ import (
 )
 
 var FullDownloadOfTheWebPage_Sample = []string{
-	"https://www.rakuten.co.jp/",
+	"https://amazon.co.jp/",
 }
 
 func TestFullDownloadOfTheWebPage(t *testing.T) {
