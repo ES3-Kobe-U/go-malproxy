@@ -4,24 +4,29 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"net/url"
 	"os"
+	"regexp"
+	"strings"
 	"testing"
-
-	"github.com/PuerkitoBio/goquery"
 )
 
 func TestMainService(t *testing.T) {
 
 }
 
+// var GoogleSearch_Sample1 = []string{
+// 	"神戸大学",
+// 	"神戸 大学",
+// 	"神戸　大学",
+// 	"KobeUniv.",
+// 	"Kobe Univ.",
+// 	"Kobe　Univ.",
+// }
+
 var GoogleSearch_Sample1 = []string{
-	"神戸大学",
-	"神戸 大学",
-	"神戸　大学",
-	"KobeUniv.",
-	"Kobe Univ.",
-	"Kobe　Univ.",
+	"Amazon 通販",
 }
 
 var GoogleSearch_Sample2 = []string{
@@ -80,7 +85,8 @@ func TestReadDataAndRewiteURL(t *testing.T) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		ioutil.WriteFile("test/rewite_"+fqdn+".html", []byte(res), os.ModePerm)
+		//ioutil.WriteFile("/home/kimura/go-malproxy/server/server/views/rewite_"+fqdn+".html", []byte(res), os.ModePerm)
+		ioutil.WriteFile("/home/kimura/go-malproxy/server/server/views/index.html", []byte(res), os.ModePerm)
 	}
 }
 
@@ -103,26 +109,84 @@ func TestRemoveFile(t *testing.T) {
 }
 
 var DataExtraction_Sample = []string{
-	"https://www.google.com/",
+	//"https://www.google.com/",
 	"https://www.amazon.co.jp/-/en/",
-	"https://www.google.com/search?q=Golang",
+	//"https://rakuten.co.jp",
 }
 
 func TestDataExtraction(t *testing.T) {
 	for _, Url := range DataExtraction_Sample {
-		doc, err := goquery.NewDocument(Url)
-		if err != nil {
-			fmt.Print("url scarapping failed")
-		}
+		resp, _ := http.Get(Url)
+		defer resp.Body.Close()
+		byteArray, _ := ioutil.ReadAll(resp.Body)
 		u, err := url.Parse(Url)
 		if err != nil {
 			log.Fatal(err)
 		}
-		res, err := doc.Html()
+		fileName := u.Hostname() //ファイル名はホスト名で統一（多分FQDNの形で返されるので、以後変数名はfqdnで統一したい）
+		err = ioutil.WriteFile("/home/kimura/go-malproxy/server/server/views/"+fileName+".html", byteArray, os.ModePerm)
 		if err != nil {
-			fmt.Print("dom get failed")
+			log.Fatal(err)
 		}
-		fileName := u.Hostname()
-		ioutil.WriteFile("test/"+fileName+".html", []byte(res), os.ModePerm)
+	}
+}
+
+func TestGetURL(t *testing.T) {
+	// url の指定
+	url := "https://rakuten.co.jp/"
+	// 正規表現の作成
+	re, err := regexp.Compile("http(.*)://(.*)")
+	if err != nil {
+		return
+	}
+	// net/http でのリクエストの発射
+	resp, _ := http.Get(url)
+	defer resp.Body.Close()
+	// []byte でリクエストの中身を取得
+	byteArray, _ := ioutil.ReadAll(resp.Body)
+	// 正規表現にあったものを全てlinks に入れる
+	links := re.FindAllString(string(byteArray), -1)
+	for i := 0; i < len(links); i++ {
+		fmt.Println(links[i])
+	}
+}
+
+/*
+URLの中身を取得　⇒　中身からハイパーリンクのURLを取得　⇒　URLを書き換え　⇒　htmlに出力
+*/
+func TestGetURLAndOutputHtml(t *testing.T) {
+	Url := "https://amazon.co.jp/"
+	re, err := regexp.Compile("http(.*)://(.*)")
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp, _ := http.Get(Url)
+	defer resp.Body.Close()
+	byteArray, _ := ioutil.ReadAll(resp.Body)
+	links := re.FindAllString(string(byteArray), -1)
+	m := map[string]string{}
+	for i := 0; i < len(links); i++ {
+		u, err := url.Parse(links[i])
+		if err != nil {
+			log.Fatal(err)
+		}
+		fn := u.Hostname()
+		fmt.Println("\x1b[31mHost Name ---> \x1b[0m", fn)
+		m["https://"+fn] = "http://mitm.es3/" + fn
+		rewrite := strings.Replace(links[i], "https://"+fn, "http://mitm.es3/"+fn, -1)
+		fmt.Println("\x1b[31mRewrite ---> \x1b[0m", rewrite)
+	}
+	for i, j := range m {
+		fmt.Println(i)
+		fmt.Println(j)
+	}
+	u, err := url.Parse(Url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fileName := u.Hostname()
+	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/server/views/"+fileName+".html", byteArray, os.ModePerm)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
