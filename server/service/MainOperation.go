@@ -1,13 +1,11 @@
 package service
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -45,21 +43,12 @@ func ReadDataAndRewiteURL(fqdn string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	res := string(data) //データを文字列に変換
-	r, err := regexp.Compile("https://(.*)")
-	if err != nil {
-		log.Fatal(err)
-	}
-	links := r.FindAllString(res, -1)
-	for i := 0; i < len(links); i++ {
-		fmt.Println("\x1b[34m 抜き出したURL---> \x1b[0m", links[i])
-	}
+	res := string(data)                                                  //データを文字列に変換
 	rewrite := strings.Replace(res, "https://", "https://mitm.es3/", -1) //文字列の置き換え
 	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rewrite), os.ModePerm)
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("\x1b[35m 書き換え結果---> \x1b[0m", rewrite)
 	return rewrite, nil
 }
 
@@ -75,16 +64,6 @@ func DataExtraction(URL string) error {
 	}
 	defer resp.Body.Close()
 	byteArray, _ := ioutil.ReadAll(resp.Body) // []byte でリクエストの中身を取得
-
-	re, err := regexp.Compile("https://(.*)") // パターンの指定
-	if err != nil {
-		return err
-	}
-	links := re.FindAllString(string(byteArray), -1) // 正規表現にあったものを全てlinks に入れる
-	for i := 0; i < len(links); i++ {
-		fmt.Println("\x1b[31m 正規表現---> \x1b[0m", links[i])
-	}
-
 	u, err := url.Parse(URL)
 	if err != nil {
 		return err
