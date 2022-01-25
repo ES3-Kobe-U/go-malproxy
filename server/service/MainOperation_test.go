@@ -28,20 +28,21 @@ var DummyUrlList = []string{
 
 func TestMainOperation(t *testing.T) {
 	for i := range DummyUrlList {
-		err := MainOperation(DummyUrlList[i])
+		res, err := MainOperation(DummyUrlList[i])
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Println("FQDN:", res)
 	}
 }
 
 func TestReadDataAndRewiteURL(t *testing.T) {
 	for _, fqdn := range UrlList {
-		res, err := ReadDataAndRewiteURL(fqdn)
+		err := ReadDataAndRewiteURL(fqdn)
 		if err != nil {
 			log.Fatal(err)
 		}
-		ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/index.html", []byte(res), os.ModePerm)
+		//ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/index.html", []byte(res), os.ModePerm)
 	}
 }
 
