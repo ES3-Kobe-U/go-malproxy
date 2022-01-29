@@ -59,7 +59,6 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:
 }
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/hello
-	fmt.Println("r->", r)
 	executor.ExecuteTemplate(w, "hello", nil)
 }
 
@@ -72,7 +71,7 @@ func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 		executor.ExecuteTemplate(w, "err", nil)
 	}
 	fmt.Println("res:", res)
-	err = service.ReadDataAndRewiteURL(res)
+	err = service.RewriteUrlOfGoogleSearch(res)
 	if err != nil {
 		executor.ExecuteTemplate(w, "err", nil)
 	}
