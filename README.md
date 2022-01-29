@@ -1,17 +1,6 @@
 # go-malproxy
 
 # 各層での設計
-## フロント
-### 使用言語
-[Vue.js](https://jp.vuejs.org/index.html)
-
-※後々HTML、PHPのみにする予定（Vueは今回のとは相性悪いので）。
-
-### 設計
-
-### TODO
-
-## バックエンド
 ### 使用言語
 [Golang](https://go.dev/)
 
