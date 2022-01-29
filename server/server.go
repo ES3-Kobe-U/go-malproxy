@@ -48,6 +48,7 @@ func Server() {
 
 	http.HandleFunc("/", IndexHandler)
 	http.HandleFunc("/hello", HelloHandler)
+	http.HandleFunc("/google", GoogleHandler)
 	http.HandleFunc("/template", TemplateHandler)
 
 	http.ListenAndServe(":3000", nil)
@@ -60,6 +61,24 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:
 func HelloHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/hello
 	fmt.Println("r->", r)
 	executor.ExecuteTemplate(w, "hello", nil)
+}
+
+func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/google
+	fmt.Println("method:", r.Method) //リクエストを取得するメソッド
+	fmt.Println("検索ワード:", r.FormValue("params"))
+	word := r.FormValue("params")
+	res, err := service.GoogleSearch(word)
+	if err != nil {
+		executor.ExecuteTemplate(w, "err", nil)
+	}
+	fmt.Println("res:", res)
+	err = service.ReadDataAndRewiteURL(res)
+	if err != nil {
+		executor.ExecuteTemplate(w, "err", nil)
+	}
+	file := "rewrite_" + res
+	fmt.Println("file:", file)
+	executor.ExecuteTemplate(w, file, nil)
 }
 
 func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/template?url=http://mitm.es3/amazon.co.jp
