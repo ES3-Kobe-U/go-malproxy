@@ -1,11 +1,13 @@
 package service
 
+import "net/url"
+
 /*
 GoogleSearch関数
 
 検索ワードを引数にとって、その検索結果のhtmlファイルを自動生成する。
 */
-func GoogleSearch(Word string) error {
+func GoogleSearch(Word string) (string, error) {
 	var query string
 	cnt := 0
 	for _, char := range Word {
@@ -21,9 +23,14 @@ func GoogleSearch(Word string) error {
 		}
 	}
 	URL := "https://google.com/search?q=" + query //Google検索のURLはこれで統一されているっぽい
-	err := DataExtraction(URL)
+	u, err := url.Parse(URL)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	fqdn := u.Hostname()
+	err = DataExtraction(URL)
+	if err != nil {
+		return "", err
+	}
+	return fqdn, nil
 }

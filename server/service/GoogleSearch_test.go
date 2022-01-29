@@ -32,10 +32,11 @@ var GoogleSearch_Sample2 = []string{
 
 func TestGoogleSearch(t *testing.T) {
 	for _, word := range GoogleSearch_Sample1 {
-		err := GoogleSearch(word)
+		res, err := GoogleSearch(word)
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Println("res:", res)
 	}
 }
 
