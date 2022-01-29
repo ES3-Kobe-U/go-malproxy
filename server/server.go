@@ -7,76 +7,67 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/go-malproxy/server/handler"
 	"github.com/go-malproxy/server/service"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
 )
 
-type Template struct {
-	templates *template.Template
+type TemplateExecutor interface {
+	ExecuteTemplate(wr io.Writer, name string, data interface{}) error
 }
 
-func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-	return t.templates.ExecuteTemplate(w, name, data)
+type DebugTemplateExecutor struct {
+	Glob string
 }
 
-var MainTemplate = &Template{
-	templates: template.Must(template.ParseGlob("/home/kimura/go-malproxy/server/templates/*.html")),
+func (e DebugTemplateExecutor) ExecuteTemplate(wr io.Writer, name string, data interface{}) error {
+	t := template.Must(template.ParseGlob(e.Glob))
+	return t.ExecuteTemplate(wr, name, data)
 }
 
-var SubTemplate = &Template{
-	templates: template.Must(template.ParseGlob("/home/kimura/go-malproxy/server/templates/*.html")),
+type ReleaseTemplateExecutor struct {
+	Template *template.Template
 }
 
-func RunMainServer() {
-	e := echo.New()
-	e.Renderer = MainTemplate
-	fmt.Println(MainTemplate.templates.Name())
-	e.Use(middleware.CORS())
-	InitRouter(e)
-	e.Logger.Fatal(e.Start(":1323"))
+func (e ReleaseTemplateExecutor) ExecuteTemplate(wr io.Writer, name string, data interface{}) error {
+	return e.Template.ExecuteTemplate(wr, name, data)
 }
 
-func RunSubServer() {
-	e := echo.New()
-	e.Renderer = SubTemplate
-	fmt.Println(SubTemplate.templates.Name())
-	e.Use(middleware.CORS())
-	InitRouter(e)
-	e.Logger.Fatal(e.Start(":1423"))
-}
+const templateGlob = "/home/kimura/go-malproxy/server/templates/*.html"
+const debug = true
 
-func InitRouter(e *echo.Echo) {
-	e.GET("/", IndexHandler)
-	e.GET("/hello", HelloHandler)
+var executor TemplateExecutor
 
-	e.GET("/template", GenSpecificSiteHandler)
+func Server() {
+	if debug {
+		executor = DebugTemplateExecutor{templateGlob}
 
-	e.GET("/login", handler.PostLoginData)
-	e.GET("/google-search", handler.GoogleSearchHandler)
-}
-
-func IndexHandler(c echo.Context) error {
-	return c.Render(http.StatusOK, "index", nil)
-}
-
-func HelloHandler(c echo.Context) error {
-	return c.Render(http.StatusOK, "hello", nil)
-}
-
-func GenSpecificSiteHandler(c echo.Context) error { // http://localhost:1323/template?url=https://amazon.co.jp
-	var params struct {
-		URL string `json:"url"`
+	} else {
+		executor = ReleaseTemplateExecutor{
+			template.Must(template.ParseGlob(templateGlob)),
+		}
 	}
-	if err := c.Bind(&params); err != nil {
-		log.Fatal(err)
-		return c.Render(http.StatusInternalServerError, "err", nil)
-	}
-	res, err := service.MainOperation(params.URL)
+
+	http.HandleFunc("/", IndexHandler)
+	http.HandleFunc("/hello", HelloHandler)
+	http.HandleFunc("/template", TemplateHandler)
+
+	http.ListenAndServe(":3000", nil)
+}
+
+func IndexHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/
+	executor.ExecuteTemplate(w, "index", nil)
+}
+
+func HelloHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/hello
+	fmt.Println("r->", r)
+	executor.ExecuteTemplate(w, "hello", nil)
+}
+
+func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/template?url=https://amazon.co.jp
+	fmt.Println("url", r.FormValue("url")) //取得したパラメータの表示
+	url := r.FormValue("url")
+	res, err := service.MainOperation(url)
 	if err != nil {
 		log.Fatal(err)
-		return c.Render(http.StatusInternalServerError, "err", nil)
 	}
-	return c.Render(http.StatusOK, res, nil)
+	executor.ExecuteTemplate(w, res, nil)
 }
