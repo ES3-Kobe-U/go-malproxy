@@ -18,7 +18,7 @@ func GoogleSearchHandler(c echo.Context) error {
 		return err
 	}
 	log.Println(Query.Params)
-	err := service.GoogleSearch(Query.Params)
+	_, err := service.GoogleSearch(Query.Params)
 	if err != nil {
 		log.Fatal(err)
 		return err

@@ -1,14 +1,13 @@
 {{define "index"}}
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google検索</title>
+<title></title>
 </head>
 <body>
-  Google
+<form action="/google" method="get">
+    検索ワード:<input type="text" name="params">
+    <input type="submit" value="検索">
+</form>
 </body>
 </html>
 {{end}}
