@@ -1,6 +1,12 @@
 package service
 
-import "net/url"
+import (
+	"io/ioutil"
+	"log"
+	"net/url"
+	"os"
+	"strings"
+)
 
 /*
 GoogleSearch関数
@@ -33,4 +39,20 @@ func GoogleSearch(Word string) (string, error) {
 		return "", err
 	}
 	return fqdn, nil
+}
+
+func RewriteUrlOfGoogleSearch(fqdn string) error {
+	data, err := ioutil.ReadFile("/home/kimura/go-malproxy/server/templates/" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	res := `{{define "rewrite_` + fqdn + `"}}` + string(data) + `{{end}}`                                   //データを文字列に変換
+	rewrite := strings.Replace(res, `<a href="/url?q=`, `<a href="http://localhost:3000/template?url=`, -1) //文字列の置き換え
+	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rewrite), os.ModePerm)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
 }
