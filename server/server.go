@@ -62,7 +62,7 @@ func HelloHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:
 	executor.ExecuteTemplate(w, "hello", nil)
 }
 
-func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/template?url=https://amazon.co.jp
+func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/template?url=http://mitm.es3/amazon.co.jp
 	fmt.Println("url", r.FormValue("url")) //取得したパラメータの表示
 	url := r.FormValue("url")
 	res, err := service.MainOperation(url)

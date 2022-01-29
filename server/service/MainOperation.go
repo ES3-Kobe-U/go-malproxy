@@ -6,19 +6,20 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 )
 
 func MainOperation(URL string) (string, error) {
 	//1. ルールに従って、URLを正規のものに戻す
-	//NewURL := strings.Replace(URL, "https://mitm.es3/", "https://", -1)
+	NewURL := strings.Replace(URL, "http://mitm.es3/", "https://", -1)
 	//2. 正規URLで正規サーバーにアクセスし、返ってきたデータをHTMLファイルにして出力
-	err := DataExtraction(URL)
+	err := DataExtraction(NewURL)
 	if err != nil {
 		log.Fatal(err)
 		return "err", err
 	}
 	//3. ルールに従って、URLを偽物のものに戻し、HTMLファイルとしてユーザーに返却
-	u, err := url.Parse(URL)
+	u, err := url.Parse(NewURL)
 	if err != nil {
 		log.Fatal(err)
 		return "err", err
