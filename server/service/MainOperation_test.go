@@ -26,6 +26,16 @@ var DummyUrlList = []string{
 	"https://mitm.es3/qiita.com/official-events/5cb794f7cb9ac194ed70",
 }
 
+var ToEncodeUrlList = []string{
+	"https://www.amazon.co.jp/ap/signin?openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.co.jp%2F%3F_encoding%3DUTF8%26ref_%3Dnav_ya_signin&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=jpflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&",
+	"https://www.amazon.co.jp/ap/signin?openid.mode=checkid_setup&amp;openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&amp;openid.return_to=https%3A%2F%2Fwww.amazon.co.jp%2Fref%3Dgw_sgn_ib%3F_encoding%3DUTF8%26pf_rd_p%3Df1e47293-143b-4dd7-9f05-590bea73bcbe%26pd_rd_wg%3D9B9dc%26pf_rd_r%3D01VZFGBVHH03P17J2DWJ%26pd_rd_w%3DY24yn%26pd_rd_r%3Dd7d8522c-13e5-4adc-b67d-4c0ceeb1f97d&amp;openid.assoc_handle=jpflex&amp;openid.pape.max_auth_age=0",
+}
+
+var ToDecodeUrlList = []string{
+	"https%3A%2F%2Fwww.amazon.co.jp%2Fap%2Fsignin%3Fopenid.pape.max_auth_age%3D0%26openid.return_to%3Dhttps%253A%252F%252Fwww.amazon.co.jp%252F%253F_encoding%253DUTF8%2526ref_%253Dnav_ya_signin%26openid.identity%3Dhttp%253A%252F%252Fspecs.openid.net%252Fauth%252F2.0%252Fidentifier_select%26openid.assoc_handle%3Djpflex%26openid.mode%3Dcheckid_setup%26openid.claimed_id%3Dhttp%253A%252F%252Fspecs.openid.net%252Fauth%252F2.0%252Fidentifier_select%26openid.ns%3Dhttp%253A%252F%252Fspecs.openid.net%252Fauth%252F2.0%26",
+	"https%3A%2F%2Fwww.amazon.co.jp%2Fap%2Fsignin%3Fopenid.mode%3Dcheckid_setup%26amp%3Bopenid.ns%3Dhttp%253A%252F%252Fspecs.openid.net%252Fauth%252F2.0%26amp%3Bopenid.return_to%3Dhttps%253A%252F%252Fwww.amazon.co.jp%252Fref%253Dgw_sgn_ib%253F_encoding%253DUTF8%2526pf_rd_p%253Df1e47293-143b-4dd7-9f05-590bea73bcbe%2526pd_rd_wg%253D9B9dc%2526pf_rd_r%253D01VZFGBVHH03P17J2DWJ%2526pd_rd_w%253DY24yn%2526pd_rd_r%253Dd7d8522c-13e5-4adc-b67d-4c0ceeb1f97d%26amp%3Bopenid.assoc_handle%3Djpflex%26amp%3Bopenid.pape.max_auth_age%3D0",
+}
+
 func TestMainOperation(t *testing.T) {
 	for i := range DummyUrlList {
 		res, err := MainOperation(DummyUrlList[i])
@@ -123,6 +133,54 @@ func TestGetURLAndOutputHtml(t *testing.T) {
 		}
 		fileName := u.Hostname()
 		err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/"+fileName+".html", byteArray, os.ModePerm)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func TestExtractURL(t *testing.T) {
+	data, err := ioutil.ReadFile("/home/kimura/go-malproxy/server/templates/www.amazon.co.jp.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	res := string(data)
+	result, err := ExtractURL(res)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for i := range result {
+		fmt.Printf("\x1b[31mResult:%d = \x1b[0m%s", i, result[i])
+		fmt.Println()
+	}
+}
+
+func TestUrlEncodeAndDecode(t *testing.T) {
+	data, err := ioutil.ReadFile("/home/kimura/go-malproxy/server/templates/www.amazon.co.jp.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	res := string(data)
+	result, err := ExtractURL(res)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for i := range result {
+		fmt.Printf("\x1b[31mResult:%d = \x1b[0m%s", i, result[i])
+		fmt.Println()
+	}
+
+	encodeRes := []string{}
+	for _, str := range result {
+		res, err := UrlEncode(str)
+		if err != nil {
+			log.Fatal(err)
+		}
+		encodeRes = append(encodeRes, res)
+	}
+
+	for _, str := range encodeRes {
+		_, err := UrlDecode(str)
 		if err != nil {
 			log.Fatal(err)
 		}
