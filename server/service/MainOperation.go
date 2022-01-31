@@ -20,6 +20,9 @@ func MainOperation(URL string) (string, error) {
 	if judge := strings.Contains(URL, `ANDANDAND`); judge {
 		URL = strings.Replace(URL, `ANDANDAND`, `&`, -1)
 	}
+	if judge := strings.Contains(URL, `EQUALEQUALEQUAL`); judge {
+		URL = strings.Replace(URL, `EQUALEQUALEQUAL`, `=`, -1)
+	}
 	fmt.Println("\x1b[34mMake URL:\x1b[0m", URL)
 
 	//2. 抽出したURLをDecodeし，正規のURLとしてDecodedURLを得る．
@@ -66,20 +69,31 @@ func ReadDataAndRewiteURL(fqdn string) error {
 	if err != nil {
 		return err
 	}
-	for i := range Url { //TODO:この処理いらないかも(要検討)
-		Url[i] = strings.Replace(Url[i], "&amp;", "ANDANDAND", -1)
-		// Url[i] = strings.Replace(Url[i], "%26", "ANDANDAND", -1)
-		// Url[i] = strings.Replace(Url[i], "=", "ANDANDAND", -1)
-		fmt.Printf("\x1b[31mResult:%d = \x1b[0m%s", i, Url[i])
-		fmt.Println()
-		enc, err := UrlEncode(Url[i])
-		if err != nil {
-			return err
-		}
-		res = strings.Replace(res, Url[i], enc, -1)
-	}
+	// for i := range Url { //TODO:この処理いらないかも(要検討)
+	// 	// Url[i] = strings.Replace(Url[i], "&amp;", "ANDANDAND", -1)
+	// 	// Url[i] = strings.Replace(Url[i], "%26", "ANDANDAND", -1)
+	// 	// Url[i] = strings.Replace(Url[i], "=", "ANDANDAND", -1)
+	// 	fmt.Printf("\x1b[31mResult:%d = \x1b[0m%s", i, Url[i])
+	// 	fmt.Println()
+	// 	// enc, err := UrlEncode(Url[i])
+	// 	// if err != nil {
+	// 	// 	return err
+	// 	// }
+	// 	// res = strings.Replace(res, Url[i], enc, -1)
+	// }
 	rew := strings.Replace(res, `<a href="`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
 	rew = strings.Replace(rew, `<a href='`, `<a href='http://localhost:3333/template?url=`, -1)  //文字列の置き換え
+	for i := range Url {
+		if judge := strings.Contains(rew, Url[i]); judge {
+			Former := Url[i]
+			Url[i] = strings.Replace(Url[i], "&amp;", "ANDANDAND", -1)
+			Url[i] = strings.Replace(Url[i], "&", "ANDANDAND", -1)
+			Url[i] = strings.Replace(Url[i], "%26", "ANDANDAND", -1)
+			Url[i] = strings.Replace(Url[i], "=", "EQUALEQUALEQUAL", -1)
+			fmt.Println("変換：", Url[i])
+			rew = strings.Replace(rew, Former, Url[i], -1)
+		}
+	}
 	rew = strings.Replace(rew, `&amp;`, `ANDANDAND`, -1)
 	rew = strings.Replace(rew, `%26`, `ANDANDAND`, -1) //再度文字列の置き換え
 	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rew), os.ModePerm)
