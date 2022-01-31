@@ -14,21 +14,29 @@ import (
 func MainOperation(URL string) (string, error) {
 	fmt.Println("\x1b[34mCatch:\x1b[0m", URL)
 	//1. ルールに従って、URLを正規のものに戻す
-	URL = strings.Replace(URL, "https://mitm.es3/", "https://", -1)
-	URL = strings.Replace(URL, `ANDANDAND`, `&`, -1)
+	if judge := strings.Contains(URL, `https://mitm.es3/`); judge {
+		URL = strings.Replace(URL, `https://mitm.es3/`, `https://`, -1)
+	}
+	if judge := strings.Contains(URL, `ANDANDAND`); judge {
+		URL = strings.Replace(URL, `ANDANDAND`, `&`, -1)
+	}
 	fmt.Println("\x1b[34mMake URL:\x1b[0m", URL)
-	//2. 正規URLで正規サーバーにアクセスし、返ってきたデータをHTMLファイルにして出力
-	DecodeURL, err := UrlDecode(URL)
+
+	//2. 抽出したURLをDecodeし，正規のURLとしてDecodedURLを得る．
+	DecodedURL, err := UrlDecode(URL)
 	if err != nil {
 		return "err", nil
 	}
-	err = DataExtraction(DecodeURL)
+
+	//3. 正規URL(DecodedURL)で正規サーバーにアクセスし、返ってきたデータをHTMLファイルにして出力
+	err = DataExtraction(DecodedURL)
 	if err != nil {
 		log.Fatal(err)
 		return "err", err
 	}
-	//3. ルールに従って、URLを偽物のものに戻し、HTMLファイルとしてユーザーに返却
-	u, err := url.Parse(DecodeURL)
+
+	//4. ルールに従って、URLを偽物のものに戻し、HTMLファイルとしてユーザーに返却
+	u, err := url.Parse(DecodedURL)
 	if err != nil {
 		log.Fatal(err)
 		return "err", err
@@ -58,7 +66,7 @@ func ReadDataAndRewiteURL(fqdn string) error {
 	if err != nil {
 		return err
 	}
-	for i := range Url {
+	for i := range Url { //TODO:この処理いらないかも(要検討)
 		Url[i] = strings.Replace(Url[i], "&amp;", "AAAAAA", -1)
 		fmt.Printf("\x1b[31mResult:%d = \x1b[0m%s", i, Url[i])
 		fmt.Println()
