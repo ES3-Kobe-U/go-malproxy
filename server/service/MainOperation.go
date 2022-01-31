@@ -67,7 +67,9 @@ func ReadDataAndRewiteURL(fqdn string) error {
 		return err
 	}
 	for i := range Url { //TODO:この処理いらないかも(要検討)
-		Url[i] = strings.Replace(Url[i], "&amp;", "AAAAAA", -1)
+		Url[i] = strings.Replace(Url[i], "&amp;", "ANDANDAND", -1)
+		// Url[i] = strings.Replace(Url[i], "%26", "ANDANDAND", -1)
+		// Url[i] = strings.Replace(Url[i], "=", "ANDANDAND", -1)
 		fmt.Printf("\x1b[31mResult:%d = \x1b[0m%s", i, Url[i])
 		fmt.Println()
 		enc, err := UrlEncode(Url[i])
@@ -77,6 +79,7 @@ func ReadDataAndRewiteURL(fqdn string) error {
 		res = strings.Replace(res, Url[i], enc, -1)
 	}
 	rew := strings.Replace(res, `<a href="`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
+	rew = strings.Replace(rew, `<a href='`, `<a href='http://localhost:3333/template?url=`, -1)  //文字列の置き換え
 	rew = strings.Replace(rew, `&amp;`, `ANDANDAND`, -1)
 	rew = strings.Replace(rew, `%26`, `ANDANDAND`, -1) //再度文字列の置き換え
 	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rew), os.ModePerm)
@@ -128,6 +131,25 @@ func ExtractURL(input string) ([]string, error) {
 	for i := 0; i < len(link); i++ {      //探索
 		if strings.Contains(link[i], "&") {
 			arr := strings.Split(link[i], `"`)
+			for _, v := range arr {
+				isUrl, err := regexp.Compile(`https://(.*)`)
+				if err != nil {
+					return nil, err
+				}
+				if isUrl.Match([]byte(v)) {
+					result = append(result, v)
+				}
+			}
+		}
+	}
+	aTag, err = regexp.Compile(`<a href='https://(.*)" `)
+	if err != nil {
+		return nil, err
+	}
+	link = aTag.FindAllString(input, -1) //aタグ内のハイパーリンクの抽出
+	for i := 0; i < len(link); i++ {     //探索
+		if strings.Contains(link[i], "&") {
+			arr := strings.Split(link[i], `'`)
 			for _, v := range arr {
 				isUrl, err := regexp.Compile(`https://(.*)`)
 				if err != nil {
