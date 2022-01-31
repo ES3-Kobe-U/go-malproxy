@@ -14,9 +14,11 @@ import (
 func MainOperation(URL string) (string, error) {
 	fmt.Println("\x1b[34mCatch:\x1b[0m", URL)
 	//1. ルールに従って、URLを正規のものに戻す
-	NewURL := strings.Replace(URL, "https://mitm.es3/", "https://", -1)
+	URL = strings.Replace(URL, "https://mitm.es3/", "https://", -1)
+	URL = strings.Replace(URL, `ANDANDAND`, `&`, -1)
+	fmt.Println("\x1b[34mMake URL:\x1b[0m", URL)
 	//2. 正規URLで正規サーバーにアクセスし、返ってきたデータをHTMLファイルにして出力
-	DecodeURL, err := UrlDecode(NewURL)
+	DecodeURL, err := UrlDecode(URL)
 	if err != nil {
 		return "err", nil
 	}
@@ -64,13 +66,13 @@ func ReadDataAndRewiteURL(fqdn string) error {
 		if err != nil {
 			return err
 		}
-		res = strings.Replace(res, Url[i], `http://localhost:3333/template?url=`+enc, -1)
+		res = strings.Replace(res, Url[i], enc, -1)
 	}
-	// rewrite := strings.Replace(res, `<a href="`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
-	// err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rewrite), os.ModePerm)
-	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(res), os.ModePerm)
+	rew := strings.Replace(res, `<a href="`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
+	rew = strings.Replace(rew, `&amp;`, `ANDANDAND`, -1)
+	rew = strings.Replace(rew, `%26`, `ANDANDAND`, -1) //再度文字列の置き換え
+	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rew), os.ModePerm)
 	if err != nil {
-		log.Fatal(err)
 		return err
 	}
 	return nil
