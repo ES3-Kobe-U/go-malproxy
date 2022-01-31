@@ -48,7 +48,7 @@ func RewriteUrlOfGoogleSearch(fqdn string) error {
 		return err
 	}
 	res := `{{define "rewrite_` + fqdn + `"}}` + string(data) + `{{end}}`                                   //データを文字列に変換
-	rewrite := strings.Replace(res, `<a href="/url?q=`, `<a href="http://localhost:3000/template?url=`, -1) //文字列の置き換え
+	rewrite := strings.Replace(res, `<a href="/url?q=`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
 	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rewrite), os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
