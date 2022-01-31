@@ -51,18 +51,18 @@ func Server() {
 	http.HandleFunc("/google", GoogleHandler)
 	http.HandleFunc("/template", TemplateHandler)
 
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(":3333", nil)
 }
 
-func IndexHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/
+func IndexHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/
 	executor.ExecuteTemplate(w, "index", nil)
 }
 
-func HelloHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/hello
+func HelloHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/hello
 	executor.ExecuteTemplate(w, "hello", nil)
 }
 
-func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/google
+func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/google
 	fmt.Println("method:", r.Method) //リクエストを取得するメソッド
 	fmt.Println("検索ワード:", r.FormValue("params"))
 	word := r.FormValue("params")
@@ -80,8 +80,8 @@ func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 	executor.ExecuteTemplate(w, file, nil)
 }
 
-func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3000/template?url=http://mitm.es3/amazon.co.jp
-	fmt.Println("url", r.FormValue("url")) //取得したパラメータの表示
+func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/template?url=http://mitm.es3/amazon.co.jp
+	fmt.Println("\x1b[31mURL:\x1b[0m", r.FormValue("url")) //取得したパラメータの表示
 	url := r.FormValue("url")
 	res, err := service.MainOperation(url)
 	if err != nil {
