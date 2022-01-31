@@ -69,18 +69,6 @@ func ReadDataAndRewiteURL(fqdn string) error {
 	if err != nil {
 		return err
 	}
-	// for i := range Url { //TODO:この処理いらないかも(要検討)
-	// 	// Url[i] = strings.Replace(Url[i], "&amp;", "ANDANDAND", -1)
-	// 	// Url[i] = strings.Replace(Url[i], "%26", "ANDANDAND", -1)
-	// 	// Url[i] = strings.Replace(Url[i], "=", "ANDANDAND", -1)
-	// 	fmt.Printf("\x1b[31mResult:%d = \x1b[0m%s", i, Url[i])
-	// 	fmt.Println()
-	// 	// enc, err := UrlEncode(Url[i])
-	// 	// if err != nil {
-	// 	// 	return err
-	// 	// }
-	// 	// res = strings.Replace(res, Url[i], enc, -1)
-	// }
 	rew := strings.Replace(res, `<a href="`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
 	rew = strings.Replace(rew, `<a href='`, `<a href='http://localhost:3333/template?url=`, -1)  //文字列の置き換え
 	for i := range Url {
@@ -95,7 +83,7 @@ func ReadDataAndRewiteURL(fqdn string) error {
 		}
 	}
 	rew = strings.Replace(rew, `&amp;`, `ANDANDAND`, -1)
-	rew = strings.Replace(rew, `%26`, `ANDANDAND`, -1) //再度文字列の置き換え
+	rew = strings.Replace(rew, `%26`, `ANDANDAND`, -1)
 	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rew), os.ModePerm)
 	if err != nil {
 		return err
