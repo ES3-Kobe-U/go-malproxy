@@ -57,12 +57,18 @@ func ReadDataAndRewiteURL(fqdn string) error {
 		return err
 	}
 	for i := range Url {
+		Url[i] = strings.Replace(Url[i], "&amp;", "AAAAAA", -1)
 		fmt.Printf("\x1b[31mResult:%d = \x1b[0m%s", i, Url[i])
 		fmt.Println()
+		enc, err := UrlEncode(Url[i])
+		if err != nil {
+			return err
+		}
+		res = strings.Replace(res, Url[i], `http://localhost:3333/template?url=`+enc, -1)
 	}
-	rewrite := strings.Replace(res, `<a href="`, `<a href="http://localhost:3000/template?url=`, -1) //文字列の置き換え
-	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rewrite), os.ModePerm)
-	// err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(res), os.ModePerm)
+	// rewrite := strings.Replace(res, `<a href="`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
+	// err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rewrite), os.ModePerm)
+	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(res), os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -111,8 +117,7 @@ func ExtractURL(input string) ([]string, error) {
 	result := []string{}                  //結果の配列
 	for i := 0; i < len(link); i++ {      //探索
 		if strings.Contains(link[i], "&") {
-			arr := []string{}
-			arr = strings.Split(link[i], `"`)
+			arr := strings.Split(link[i], `"`)
 			for _, v := range arr {
 				isUrl, err := regexp.Compile(`https://(.*)`)
 				if err != nil {

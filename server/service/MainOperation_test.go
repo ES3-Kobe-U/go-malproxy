@@ -42,7 +42,7 @@ func TestMainOperation(t *testing.T) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("FQDN:", res)
+		fmt.Println("\x1b[35mFQDN:\x1b[0m", res)
 	}
 }
 
