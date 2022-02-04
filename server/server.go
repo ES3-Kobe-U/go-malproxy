@@ -49,6 +49,8 @@ func Server() {
 	http.HandleFunc("/", IndexHandler)
 	http.HandleFunc("/hello", HelloHandler)
 	http.HandleFunc("/google", GoogleHandler)
+	http.HandleFunc("/amazon-login", AmazonLoginHandler)
+	http.HandleFunc("/amazon-login-password", AmazonLoginPasswordHandler)
 	http.HandleFunc("/template", TemplateHandler)
 
 	http.ListenAndServe(":3333", nil)
@@ -60,6 +62,14 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/hello
 	executor.ExecuteTemplate(w, "hello", nil)
+}
+
+func AmazonLoginHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login
+	executor.ExecuteTemplate(w, "amazon-login", nil)
+}
+
+func AmazonLoginPasswordHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login-password
+	executor.ExecuteTemplate(w, "amazon-login-password", nil)
 }
 
 func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/google
