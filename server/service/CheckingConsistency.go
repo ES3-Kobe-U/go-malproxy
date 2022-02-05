@@ -2,17 +2,25 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"io/ioutil"
 	"os"
 	"time"
 
+	"github.com/chromedp/cdproto/dom"
 	"github.com/chromedp/chromedp"
 )
 
-/* ※WSLでは動かない(Chromeがない)．
+// ※WSLでは動かない(Chromeがない)．
+
+/*
 Amazon用の処理
 */
 func CheckingTheIntegrityOfAmazonInformation(email string, password string) error {
-	var res []byte
+	var res1 []byte
+	var res2 []byte
+	var data string
+	var str string = "xxxxxx"
 	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
 	defer cancel()
 	err := chromedp.Run(ctx,
@@ -26,11 +34,83 @@ func CheckingTheIntegrityOfAmazonInformation(email string, password string) erro
 		chromedp.SetValue(`ap_password`, password, chromedp.ByID),
 		chromedp.Click(`signInSubmit`, chromedp.ByID),
 		chromedp.Sleep(time.Second*2),
-		chromedp.CaptureScreenshot(&res),
+		chromedp.CaptureScreenshot(&res1),
+		chromedp.SetValue(`ap_password`, password, chromedp.ByID),
+		chromedp.ActionFunc(func(c context.Context) error {
+			fmt.Println("output --> res1.png")
+			err := os.WriteFile("./res1.png", res1, 0644)
+			if err != nil {
+				return err
+			}
+			return nil
+		}),
+		chromedp.Sleep(time.Second*10),
+		chromedp.ActionFunc(func(c context.Context) error {
+			var input string
+			fmt.Print("fmt.Scan >")
+			fmt.Scanf("%s", &input)
+			str = input
+			fmt.Println("input:", str)
+			return nil
+		}),
+		chromedp.Sleep(time.Second*10),
+		chromedp.SetValue(`auth-captcha-guess`, str, chromedp.ByID),
+		chromedp.CaptureScreenshot(&res2),
+		chromedp.ScrollIntoView(`footer`),
+		chromedp.Text(`h1`, &data, chromedp.NodeVisible, chromedp.ByQuery),
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			node, err := dom.GetDocument().Do(ctx)
+			if err != nil {
+				return err
+			}
+			data, err := dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
+			if err != nil {
+				return err
+			}
+			err = ioutil.WriteFile("result.html", []byte(data), os.ModePerm)
+			if err != nil {
+				return err
+			}
+			return nil
+		}),
 	)
 	if err != nil {
 		return err
 	}
-	os.WriteFile("./loggedin.png", res, 0644)
+	//os.WriteFile("./res1.png", res1, 0644)
+	os.WriteFile("./res2.png", res2, 0644)
+	return nil
+}
+
+/*
+楽天用の処理
+*/
+func CheckingTheIntegrityOfRakutenInformation(userId string, password string) error {
+	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
+	defer cancel()
+	//var data string
+	err := chromedp.Run(ctx,
+		chromedp.Navigate("https://grp01.id.rakuten.co.jp/rms/nid/vc?__event=login&service_id=top"),
+		chromedp.WaitReady("body"),
+		chromedp.Sleep(time.Second*1),
+		chromedp.SetValue(`loginInner_u`, userId, chromedp.ByID),
+		chromedp.SetValue(`loginInner_p`, password, chromedp.ByID),
+		chromedp.Click(`auto_logout`, chromedp.ByID),
+		chromedp.Sleep(time.Second*1),
+		chromedp.Click(`#loginInner > p:nth-child(3) > input`, chromedp.BySearch),
+		chromedp.Sleep(time.Second*10),
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			node, err := dom.GetDocument().Do(ctx)
+			if err != nil {
+				return err
+			}
+			data, er := dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
+			fmt.Print(data)
+			return er
+		}),
+	)
+	if err != nil {
+		return err
+	}
 	return nil
 }
