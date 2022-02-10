@@ -26,7 +26,7 @@ func CheckingTheIntegrityOfAmazonInformation(email string, password string) erro
 	defer cancel()
 
 	task1 := chromedp.Tasks{ //タスクリストの作成
-		chromedp.Navigate("https://www.amazon.co.jp/stores/page/FD12D065-F94A-4656-B816-4C8121739FAE?ingress=3"),
+		chromedp.Navigate("https://www.amazon.co.jp/?&tag=hydraamazonav-22&ref=pd_sl_2ykkalld4i_e&adgrpid=54841807378&hvpone=&hvptwo=&hvadid=289239574720&hvpos=&hvnetw=g&hvrand=13443261105670128409&hvqmt=e&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=1009565&hvtargid=kwd-333588672930&hydadcr=15460_10908920&gclid=Cj0KCQiAjJOQBhCkARIsAEKMtO0jVYrB9RxzmNKNeCPzZE0CB_TUL10D5UonY9FkHd4maUGPDrYDe4UaAnhwEALw_wcB"),
 		chromedp.WaitReady("body"),
 		chromedp.CaptureScreenshot(&res0),
 		chromedp.Click(`a[data-nav-role='signin']`, chromedp.ByQuery),
