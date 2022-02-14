@@ -11,3 +11,6 @@ MS=""
 git:
 	git commit -m ${MS}
 	git push origin HEAD
+
+clean:
+	find server/templates -name 'autogen*' -delete
