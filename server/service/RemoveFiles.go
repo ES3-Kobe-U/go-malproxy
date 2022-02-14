@@ -15,8 +15,8 @@ RemoveFile関数
 
 FQDNを引数にとって、FQDN.htmlを外部コマンドで削除する。
 */
-func RemoveFile(fqdn string) error {
-	cmdRemove := exec.Command("rm", "test/"+fqdn+".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
+func RemoveFile() error {
+	cmdRemove := exec.Command("find", "../templates", "-name", "autogen*", "-delete") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
 	cmdRemove.Stderr = os.Stderr
 	cmdRemove.Stdin = os.Stdin
 	out, err := cmdRemove.Output()
