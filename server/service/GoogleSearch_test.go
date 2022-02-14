@@ -36,9 +36,9 @@ func TestGoogleSearch(t *testing.T) {
 			word: "Kobe　Univ.",
 		},
 	}
-	for _, tetestcase := range testcases {
-		t.Run(tetestcase.name, func(t *testing.T) {
-			res, err := GoogleSearch(tetestcase.word)
+	for _, testcase := range testcases {
+		t.Run(testcase.name, func(t *testing.T) {
+			res, err := GoogleSearch(testcase.word)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -103,11 +103,11 @@ func TestMakeGoogleURL(t *testing.T) {
 			expect: "https://google.com/search?q=Kobe+Univ.",
 		},
 	}
-	for _, tetestcase := range testcases {
-		t.Run(tetestcase.name, func(t *testing.T) {
+	for _, testcase := range testcases {
+		t.Run(testcase.name, func(t *testing.T) {
 			var query string
 			cnt := 0
-			for _, char := range tetestcase.word {
+			for _, char := range testcase.word {
 				if char == ' ' || char == '　' { //空文字列なら+に変換
 					cnt += 1
 					if cnt < 2 {
@@ -120,8 +120,8 @@ func TestMakeGoogleURL(t *testing.T) {
 				}
 			}
 			URL := "https://google.com/search?q=" + query //Google検索のURLはこれで統一されているっぽい
-			if URL != tetestcase.expect {
-				t.Errorf("got=%s, want=%s\n", URL, tetestcase.expect)
+			if URL != testcase.expect {
+				t.Errorf("got=%s, want=%s\n", URL, testcase.expect)
 			}
 		})
 	}
