@@ -3,6 +3,7 @@ module github.com/go-malproxy
 go 1.17
 
 require (
+	github.com/chromedp/cdproto v0.0.0-20220131204822-e6abebe7b8cd
 	github.com/chromedp/chromedp v0.7.7
 	github.com/labstack/echo v3.3.10+incompatible
 )
@@ -18,7 +19,6 @@ require (
 )
 
 require (
-	github.com/chromedp/cdproto v0.0.0-20220131204822-e6abebe7b8cd // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
