@@ -85,7 +85,7 @@ func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 	if err != nil {
 		executor.ExecuteTemplate(w, "err", nil)
 	}
-	file := "rewrite_" + res
+	file := "autogen_rewrite_" + res
 	fmt.Println("file:", file)
 	executor.ExecuteTemplate(w, file, nil)
 }

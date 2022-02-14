@@ -50,7 +50,7 @@ func MainOperation(URL string) (string, error) {
 		log.Fatal(err)
 		return "err", err
 	}
-	return "rewrite_" + fqdn, nil
+	return "autogen_rewrite_" + fqdn, nil
 }
 
 /*
@@ -59,12 +59,12 @@ ReadDataAndRewiteURL関数
 FQDNを引数にとって、FQDN.htmlファイル内にある"https://"を"http://mitm.es3/"に置き換え、その結果を文字列として返す。
 */
 func ReadDataAndRewiteURL(fqdn string) error {
-	data, err := ioutil.ReadFile("/home/kimura/go-malproxy/server/templates/" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
+	data, err := ioutil.ReadFile("/home/kimura/go-malproxy/server/templates/autogen_" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
-	res := `{{define "rewrite_` + fqdn + `"}}` + string(data) + `{{end}}` //データを文字列に変換
+	res := `{{define "autogen_rewrite_` + fqdn + `"}}` + string(data) + `{{end}}` //データを文字列に変換
 	Url, err := ExtractURL(res)
 	if err != nil {
 		return err
@@ -84,7 +84,7 @@ func ReadDataAndRewiteURL(fqdn string) error {
 	}
 	rew = strings.Replace(rew, `&amp;`, `ANDANDAND`, -1)
 	rew = strings.Replace(rew, `%26`, `ANDANDAND`, -1)
-	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/rewrite_"+fqdn+".html", []byte(rew), os.ModePerm)
+	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/autogen_rewrite_"+fqdn+".html", []byte(rew), os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -110,7 +110,7 @@ func DataExtraction(URL string) error {
 		return err
 	}
 	fileName := u.Hostname() //ファイル名はホスト名で統一（多分FQDNの形で返されるので、以後変数名はfqdnで統一したい）
-	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/"+fileName+".html", byteArray, os.ModePerm)
+	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/autogen_"+fileName+".html", byteArray, os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
 		return err
