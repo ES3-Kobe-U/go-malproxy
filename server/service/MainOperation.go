@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -12,7 +11,6 @@ import (
 )
 
 func MainOperation(URL string) (string, error) {
-	fmt.Println("\x1b[34mCatch:\x1b[0m", URL)
 	//1. ルールに従って、URLを正規のものに戻す
 	if judge := strings.Contains(URL, `https://mitm.es3/`); judge {
 		URL = strings.Replace(URL, `https://mitm.es3/`, `https://`, -1)
@@ -23,7 +21,6 @@ func MainOperation(URL string) (string, error) {
 	if judge := strings.Contains(URL, `EQUALEQUALEQUAL`); judge {
 		URL = strings.Replace(URL, `EQUALEQUALEQUAL`, `=`, -1)
 	}
-	fmt.Println("\x1b[34mMake URL:\x1b[0m", URL)
 
 	//2. 抽出したURLをDecodeし，正規のURLとしてDecodedURLを得る．
 	DecodedURL, err := UrlDecode(URL)
@@ -78,7 +75,6 @@ func ReadDataAndRewiteURL(fqdn string) error {
 			Url[i] = strings.Replace(Url[i], "&", "ANDANDAND", -1)
 			Url[i] = strings.Replace(Url[i], "%26", "ANDANDAND", -1)
 			Url[i] = strings.Replace(Url[i], "=", "EQUALEQUALEQUAL", -1)
-			fmt.Println("変換：", Url[i])
 			rew = strings.Replace(rew, Former, Url[i], -1)
 		}
 	}
@@ -173,7 +169,6 @@ URLエンコーディング
 */
 func UrlEncode(str string) (string, error) {
 	str = url.QueryEscape(str)
-	fmt.Println("\x1b[31mEncode:\x1b[0m", str)
 	return str, nil
 }
 
@@ -183,10 +178,9 @@ UrlDecode関数
 URLデコーディング
 */
 func UrlDecode(str string) (string, error) {
-	str, err := url.QueryUnescape(str)
+	_, err := url.QueryUnescape(str)
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("\x1b[31mDecode:\x1b[0m", str)
 	return str, nil
 }

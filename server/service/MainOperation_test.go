@@ -36,11 +36,10 @@ func TestMainOperation(t *testing.T) {
 	}
 	for _, testcase := range testcases {
 		t.Run(testcase.name, func(t *testing.T) {
-			res, err := MainOperation(testcase.url)
+			_, err := MainOperation(testcase.url)
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println("\x1b[35mFQDN:\x1b[0m", res)
 		})
 	}
 }
