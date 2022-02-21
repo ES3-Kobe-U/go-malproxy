@@ -3,3 +3,9 @@ autogen_*.html
 
 #環境変数ファイル
 *.env
+
+#node modules
+node_modules
+
+#楽天
+rakuten
