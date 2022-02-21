@@ -1,2 +1,8 @@
-#自動生成ファイルは無視
+#自動生成ファイル
 autogen_*.html
+
+#config
+config*
+
+#環境変数ファイル
+*.env

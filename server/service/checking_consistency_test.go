@@ -6,6 +6,10 @@ import (
 )
 
 func TestCheckingTheIntegrityOfAmazonInformation(t *testing.T) {
+	amazonConfig, err := LoadAmazonEnv()
+	if err != nil {
+		t.Errorf("err:%v", err)
+	}
 	testcases := []struct {
 		name     string
 		email    string
@@ -14,8 +18,8 @@ func TestCheckingTheIntegrityOfAmazonInformation(t *testing.T) {
 		//各々テストケースを記述
 		{
 			name:     "example-00",
-			email:    `example.00@email.com`,
-			password: `example00`,
+			email:    amazonConfig.Email,
+			password: amazonConfig.Password,
 		},
 	}
 
@@ -29,6 +33,10 @@ func TestCheckingTheIntegrityOfAmazonInformation(t *testing.T) {
 }
 
 func TestCheckingTheIntegrityOfRakutenInformation(t *testing.T) {
+	rakutenConfig, err := LoadRakutenEnv()
+	if err != nil {
+		t.Errorf("err:%v", err)
+	}
 	testcases := []struct {
 		name     string
 		userId   string
@@ -37,8 +45,8 @@ func TestCheckingTheIntegrityOfRakutenInformation(t *testing.T) {
 		//各々テストケースを記述
 		{
 			name:     "example-00",
-			userId:   `example.00@email.com`,
-			password: `example00`,
+			userId:   rakutenConfig.UserId,
+			password: rakutenConfig.Password,
 		},
 	}
 
@@ -48,5 +56,11 @@ func TestCheckingTheIntegrityOfRakutenInformation(t *testing.T) {
 				log.Fatal(err)
 			}
 		})
+	}
+}
+
+func TestGoRakuten(t *testing.T) {
+	if err := GoRakuten(); err != nil {
+		t.Errorf("err:%v", err)
 	}
 }

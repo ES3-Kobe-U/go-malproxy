@@ -132,24 +132,71 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
 	defer cancel()
 	//var data string
+	var res6 []byte
+	var res7 []byte
+	var res8 []byte
 	err := chromedp.Run(ctx,
 		chromedp.Navigate("https://grp01.id.rakuten.co.jp/rms/nid/vc?__event=login&service_id=top"),
 		chromedp.WaitReady("body"),
 		chromedp.Sleep(time.Second*1),
+		chromedp.CaptureScreenshot(&res6),
 		chromedp.SetValue(`loginInner_u`, userId, chromedp.ByID),
 		chromedp.SetValue(`loginInner_p`, password, chromedp.ByID),
+		chromedp.CaptureScreenshot(&res7),
 		chromedp.Click(`auto_logout`, chromedp.ByID),
 		chromedp.Sleep(time.Second*1),
 		chromedp.Click(`#loginInner > p:nth-child(3) > input`, chromedp.BySearch),
 		chromedp.Sleep(time.Second*10),
+		chromedp.CaptureScreenshot(&res8),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			node, err := dom.GetDocument().Do(ctx)
 			if err != nil {
 				return err
 			}
-			data, er := dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
-			fmt.Print(data)
-			return er
+			data, err := dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
+			if err != nil {
+				return err
+			}
+			err = ioutil.WriteFile("autogen_rakuten.html", []byte(data), os.ModePerm)
+			if err != nil {
+				return err
+			}
+			return nil
+		}),
+	)
+	if err != nil {
+		return err
+	}
+	os.WriteFile("./res6.png", res6, 0644)
+	os.WriteFile("./res7.png", res7, 0644)
+	os.WriteFile("./res8.png", res8, 0644)
+	return nil
+}
+
+/*
+楽天サイトに入るだけの処理
+*/
+func GoRakuten() error {
+	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
+	defer cancel()
+	err := chromedp.Run(ctx,
+		chromedp.Navigate("https://rakuten.co.jp"),
+		chromedp.WaitReady("body"),
+		chromedp.Sleep(time.Second*1),
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			node, err := dom.GetDocument().Do(ctx)
+			if err != nil {
+				return err
+			}
+			data, err := dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
+			if err != nil {
+				return err
+			}
+			err = ioutil.WriteFile("autogen_rakuten.html", []byte(data), os.ModePerm)
+			if err != nil {
+				return err
+			}
+			return nil
 		}),
 	)
 	if err != nil {
