@@ -1,8 +1,5 @@
 #自動生成ファイル
 autogen_*.html
 
-#config
-config*
-
 #環境変数ファイル
 *.env
