@@ -135,19 +135,20 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 	var res6 []byte
 	var res7 []byte
 	var res8 []byte
+	var res9 []byte
 	err := chromedp.Run(ctx,
 		chromedp.Navigate("https://grp01.id.rakuten.co.jp/rms/nid/vc?__event=login&service_id=top"),
 		chromedp.WaitReady("body"),
 		chromedp.Sleep(time.Second*1),
 		chromedp.CaptureScreenshot(&res6),
-		chromedp.SetValue(`loginInner_u`, userId, chromedp.ByID),
-		chromedp.SetValue(`loginInner_p`, password, chromedp.ByID),
+		chromedp.SetValue(`document.querySelector("#loginInner_u")`, userId, chromedp.ByJSPath),
+		chromedp.SetValue(`document.querySelector("#loginInner_p")`, password, chromedp.ByJSPath),
 		chromedp.CaptureScreenshot(&res7),
-		chromedp.Click(`auto_logout`, chromedp.ByID),
-		chromedp.Sleep(time.Second*1),
-		chromedp.Click(`#loginInner > p:nth-child(3) > input`, chromedp.BySearch),
-		chromedp.Sleep(time.Second*10),
+		chromedp.Click(`document.querySelector("#auto_logout")`, chromedp.ByJSPath),
 		chromedp.CaptureScreenshot(&res8),
+		chromedp.Click(`document.querySelector("#loginInner > p:nth-child(3) > input")`, chromedp.ByJSPath),
+		chromedp.Sleep(time.Second*12),
+		chromedp.CaptureScreenshot(&res9),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			node, err := dom.GetDocument().Do(ctx)
 			if err != nil {
@@ -157,7 +158,7 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 			if err != nil {
 				return err
 			}
-			err = ioutil.WriteFile("autogen_rakuten.html", []byte(data), os.ModePerm)
+			err = ioutil.WriteFile("../templates/autogen_rakuten.html", []byte(data), os.ModePerm)
 			if err != nil {
 				return err
 			}
@@ -170,6 +171,7 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 	os.WriteFile("./res6.png", res6, 0644)
 	os.WriteFile("./res7.png", res7, 0644)
 	os.WriteFile("./res8.png", res8, 0644)
+	os.WriteFile("./res9.png", res9, 0644)
 	return nil
 }
 
