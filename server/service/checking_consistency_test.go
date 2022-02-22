@@ -23,9 +23,9 @@ func TestCheckingTheIntegrityOfAmazonInformation(t *testing.T) {
 		},
 	}
 
-	for _, tetestcase := range testcases {
-		t.Run(tetestcase.name, func(t *testing.T) {
-			if err := CheckingTheIntegrityOfAmazonInformation(tetestcase.email, tetestcase.password); err != nil {
+	for _, testcase := range testcases {
+		t.Run(testcase.name, func(t *testing.T) {
+			if err := CheckingTheIntegrityOfAmazonInformation(testcase.email, testcase.password); err != nil {
 				log.Fatal(err)
 			}
 		})
@@ -50,9 +50,9 @@ func TestCheckingTheIntegrityOfRakutenInformation(t *testing.T) {
 		},
 	}
 
-	for _, tetestcase := range testcases {
-		t.Run(tetestcase.name, func(t *testing.T) {
-			if err := CheckingTheIntegrityOfRakutenInformation(tetestcase.userId, tetestcase.password); err != nil {
+	for _, testcase := range testcases {
+		t.Run(testcase.name, func(t *testing.T) {
+			if err := CheckingTheIntegrityOfRakutenInformation(testcase.userId, testcase.password); err != nil {
 				log.Fatal(err)
 			}
 		})
