@@ -14,3 +14,5 @@ git:
 
 clean:
 	find server/templates -name 'autogen*' -delete
+	find server/service -name 'autogen*' -delete
+	find server/service -name '*.png' -delete
