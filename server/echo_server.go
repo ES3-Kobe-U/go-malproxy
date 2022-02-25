@@ -22,7 +22,7 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 var MainTemplate = &Template{
-	templates: template.Must(template.ParseGlob("/home/kimura/go-malproxy/server/templates/*.html")),
+	templates: template.Must(template.ParseGlob("server/templates/*.html")),
 }
 
 func EchoServer() {

@@ -111,7 +111,7 @@ func TestDataExtraction(t *testing.T) {
 				log.Fatal(err)
 			}
 			fileName := u.Hostname() //ファイル名はホスト名で統一（多分FQDNの形で返されるので、以後変数名はfqdnで統一したい）
-			err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/autogen_"+fileName+".html", byteArray, os.ModePerm)
+			err = ioutil.WriteFile("server/templates/autogen_"+fileName+".html", byteArray, os.ModePerm)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -220,7 +220,7 @@ func TestGetURLAndOutputHtml(t *testing.T) {
 				log.Fatal(err)
 			}
 			fileName := u.Hostname()
-			err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/autogen_"+fileName+".html", byteArray, os.ModePerm)
+			err = ioutil.WriteFile("server/templates/autogen_"+fileName+".html", byteArray, os.ModePerm)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -229,7 +229,7 @@ func TestGetURLAndOutputHtml(t *testing.T) {
 }
 
 func TestExtractURL(t *testing.T) {
-	data, err := ioutil.ReadFile("/home/kimura/go-malproxy/server/templates/autogen_amazon.co.jp.html")
+	data, err := ioutil.ReadFile("server/templates/autogen_amazon.co.jp.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -245,7 +245,7 @@ func TestExtractURL(t *testing.T) {
 }
 
 func TestUrlEncodeAndDecode(t *testing.T) {
-	data, err := ioutil.ReadFile("/home/kimura/go-malproxy/server/templates/autogen_amazon.co.jp.html")
+	data, err := ioutil.ReadFile("server/templates/autogen_amazon.co.jp.html")
 	if err != nil {
 		log.Fatal(err)
 	}

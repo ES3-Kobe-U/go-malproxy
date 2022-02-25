@@ -42,14 +42,14 @@ func GoogleSearch(Word string) (string, error) {
 }
 
 func RewriteUrlOfGoogleSearch(fqdn string) error {
-	data, err := ioutil.ReadFile("/home/kimura/go-malproxy/server/templates/autogen_" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
+	data, err := ioutil.ReadFile("server/templates/autogen_" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
 	res := `{{define "autogen_rewrite_` + fqdn + `"}}` + string(data) + `{{end}}`                           //データを文字列に変換
 	rewrite := strings.Replace(res, `<a href="/url?q=`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
-	err = ioutil.WriteFile("/home/kimura/go-malproxy/server/templates/autogen_rewrite_"+fqdn+".html", []byte(rewrite), os.ModePerm)
+	err = ioutil.WriteFile("server/templates/autogen_rewrite_"+fqdn+".html", []byte(rewrite), os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
 		return err

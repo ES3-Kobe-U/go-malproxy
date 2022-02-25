@@ -31,7 +31,7 @@ func (e ReleaseTemplateExecutor) ExecuteTemplate(wr io.Writer, name string, data
 	return e.Template.ExecuteTemplate(wr, name, data)
 }
 
-const templateGlob = "/home/kimura/go-malproxy/server/templates/*.html"
+const templateGlob = "server/templates/*.html"
 const debug = true
 
 var executor TemplateExecutor
