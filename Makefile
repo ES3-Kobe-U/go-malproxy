@@ -1,5 +1,5 @@
 run:
-	@ echo "Boot main server."
+	@ echo "Boot main server. click http://localhost:3333/"
 	go run main.go
 
 all:
