@@ -1,5 +1,5 @@
 run:
-	@ echo "サーバを起動します"
+	@ echo "Boot main server."
 	go run main.go
 
 all:
