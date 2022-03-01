@@ -51,7 +51,7 @@ func Server() {
 	http.HandleFunc("/hello", HelloHandler)
 	http.HandleFunc("/google", GoogleHandler)
 	http.HandleFunc("/amazon-login", AmazonLoginHandler)
-	http.HandleFunc("/amazon", AmazonHandler)
+	http.HandleFunc("/amazon-login-info", AmazonHandler)
 	http.HandleFunc("/template", TemplateHandler)
 
 	http.ListenAndServe(":3333", nil)
@@ -69,9 +69,17 @@ func AmazonLoginHandler(w http.ResponseWriter, r *http.Request) { // http://loca
 	executor.ExecuteTemplate(w, "amazon-login", nil)
 }
 
-func AmazonHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login-password
+func AmazonHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login-info
 	fmt.Println("method:", r.Method)
-	executor.ExecuteTemplate(w, "amazon-login-password", nil)
+	fmt.Println("email", r.FormValue("email"))
+	fmt.Println("password", r.FormValue("password"))
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+	err := service.CheckingTheIntegrityOfAmazonInformation(email, password)
+	if err != nil {
+		executor.ExecuteTemplate(w, "err", nil)
+	}
+	executor.ExecuteTemplate(w, "autogen_amazon_info", nil)
 }
 
 func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/google
@@ -96,10 +104,10 @@ func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localho
 	fmt.Println("\x1b[31mURL:\x1b[0m", r.FormValue("url")) //取得したパラメータの表示
 	url := r.FormValue("url")
 	if strings.Contains(url, "https://www.amazon.co.jp/ap/signin?openid.pape.max_auth_age"){
-		fmt.Println("Amazonログイン")
+		fmt.Println("Amazon Login")
 		executor.ExecuteTemplate(w, "amazon-login", nil)
 	}else{
-		fmt.Println("メイン操作")
+		fmt.Println("Main Operation")
 		res, err := service.MainOperation(url)
 	    if err != nil {
 		    log.Fatal(err)
