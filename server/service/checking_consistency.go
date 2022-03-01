@@ -17,6 +17,7 @@ import (
 Amazon用の処理
 */
 func CheckingTheIntegrityOfAmazonInformation(email string, password string) error {
+	var res string
 	var res0 []byte
 	var res1 []byte
 	var res2 []byte
@@ -37,6 +38,17 @@ func CheckingTheIntegrityOfAmazonInformation(email string, password string) erro
 		chromedp.Click(`signInSubmit`, chromedp.ByID),
 		chromedp.Sleep(time.Second * 2),
 		chromedp.CaptureScreenshot(&res2),
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			node, err := dom.GetDocument().Do(ctx)
+			if err != nil {
+				return err
+			}
+			res, err = dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
+			if err != nil {
+				return err
+			}
+			return nil
+		}),
 	}
 	err := chromedp.Run(ctx, task1)
 	if err != nil {
@@ -55,7 +67,11 @@ func CheckingTheIntegrityOfAmazonInformation(email string, password string) erro
 	os.WriteFile("./res0.png", res0, 0644)
 	os.WriteFile("./res1.png", res1, 0644)
 	os.WriteFile("./res2.png", res2, 0644)
-	os.WriteFile("./res3.png", res3, 0644)
+	output := `{{define "autogen_amazon_info"}}` + res + `{{end}}`
+	err = os.WriteFile("server/templates/autogen_amazon_login.html", []byte(output), 0644)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
