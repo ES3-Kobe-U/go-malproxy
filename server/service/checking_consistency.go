@@ -147,7 +147,7 @@ func AmaoznCaptcha(email string, password string) error {
 func CheckingTheIntegrityOfRakutenInformation(userId string, password string) error {
 	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
 	defer cancel()
-	//var data string
+	var res string
 	var res6 []byte
 	var res7 []byte
 	var res8 []byte
@@ -170,11 +170,7 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 			if err != nil {
 				return err
 			}
-			data, err := dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
-			if err != nil {
-				return err
-			}
-			err = ioutil.WriteFile("../templates/autogen_rakuten.html", []byte(data), os.ModePerm)
+			res, err = dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
 			if err != nil {
 				return err
 			}
@@ -188,6 +184,11 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 	os.WriteFile("./res7.png", res7, 0644)
 	os.WriteFile("./res8.png", res8, 0644)
 	os.WriteFile("./res9.png", res9, 0644)
+	output := `{{define "autogen_rakuten_info"}}` + res + `{{end}}`
+	err = os.WriteFile("server/templates/autogen_rakuten_login.html", []byte(output), 0644)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

