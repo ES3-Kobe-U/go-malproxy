@@ -50,6 +50,7 @@ func Server() {
 	http.HandleFunc("/", IndexHandler)
 	http.HandleFunc("/hello", HelloHandler)
 	http.HandleFunc("/google", GoogleHandler)
+	http.HandleFunc("/rakuten", RakutenHandler)
 	http.HandleFunc("/amazon-login", AmazonLoginHandler)
 	http.HandleFunc("/amazon-login-info", AmazonHandler)
 	http.HandleFunc("/template", TemplateHandler)
@@ -100,18 +101,22 @@ func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 	executor.ExecuteTemplate(w, file, nil)
 }
 
+func RakutenHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/rakuten
+	executor.ExecuteTemplate(w, "rakuten", nil)
+}
+
 func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/template?url=http://mitm.es3/amazon.co.jp
 	fmt.Println("\x1b[31mURL:\x1b[0m", r.FormValue("url")) //取得したパラメータの表示
 	url := r.FormValue("url")
-	if strings.Contains(url, "https://www.amazon.co.jp/ap/signin?openid.pape.max_auth_age"){
+	if strings.Contains(url, "https://www.amazon.co.jp/ap/signin?openid.pape.max_auth_age") {
 		fmt.Println("Amazon Login")
 		executor.ExecuteTemplate(w, "amazon-login", nil)
-	}else{
+	} else {
 		fmt.Println("Main Operation")
 		res, err := service.MainOperation(url)
-	    if err != nil {
-		    log.Fatal(err)
-	    }
-	    executor.ExecuteTemplate(w, res, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+		executor.ExecuteTemplate(w, res, nil)
 	}
 }

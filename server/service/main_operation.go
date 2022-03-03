@@ -67,7 +67,8 @@ func ReadDataAndRewiteURL(fqdn string) error {
 		return err
 	}
 	rew := strings.Replace(res, `<a href="`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
-	rew = strings.Replace(rew, `<a href='`, `<a href='http://localhost:3333/template?url=`, -1) //文字列の置き換え
+	rew = strings.Replace(rew, `<a href='`, `<a href='http://localhost:3333/template?url=`, -1)  //文字列の置き換え
+	rew = strings.Replace(rew, `pa3.min.js`, ``, -1)                                             //文字列の置き換え
 	for i := range Url {
 		if judge := strings.Contains(rew, Url[i]); judge {
 			Former := Url[i]
