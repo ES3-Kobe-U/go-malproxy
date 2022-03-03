@@ -46,11 +46,13 @@ func Server() {
 			template.Must(template.ParseGlob(templateGlob)),
 		}
 	}
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("server/public/"))))
 
 	http.HandleFunc("/", IndexHandler)
 	http.HandleFunc("/hello", HelloHandler)
 	http.HandleFunc("/google", GoogleHandler)
 	http.HandleFunc("/rakuten", RakutenHandler)
+	http.HandleFunc("/rakuten-login", RakutenLoginHandler)
 	http.HandleFunc("/amazon-login", AmazonLoginHandler)
 	http.HandleFunc("/amazon-login-info", AmazonHandler)
 	http.HandleFunc("/template", TemplateHandler)
@@ -64,23 +66,6 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/hello
 	executor.ExecuteTemplate(w, "hello", nil)
-}
-
-func AmazonLoginHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login
-	executor.ExecuteTemplate(w, "amazon-login", nil)
-}
-
-func AmazonHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login-info
-	fmt.Println("method:", r.Method)
-	fmt.Println("email", r.FormValue("email"))
-	fmt.Println("password", r.FormValue("password"))
-	email := r.FormValue("email")
-	password := r.FormValue("password")
-	err := service.CheckingTheIntegrityOfAmazonInformation(email, password)
-	if err != nil {
-		executor.ExecuteTemplate(w, "err", nil)
-	}
-	executor.ExecuteTemplate(w, "autogen_amazon_info", nil)
 }
 
 func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/google
@@ -103,6 +88,27 @@ func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 
 func RakutenHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/rakuten
 	executor.ExecuteTemplate(w, "rakuten", nil)
+}
+
+func RakutenLoginHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/rakuten-login
+	executor.ExecuteTemplate(w, "rakuten-login", nil)
+}
+
+func AmazonLoginHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login
+	executor.ExecuteTemplate(w, "amazon-login", nil)
+}
+
+func AmazonHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login-info
+	fmt.Println("method:", r.Method)
+	fmt.Println("email", r.FormValue("email"))
+	fmt.Println("password", r.FormValue("password"))
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+	err := service.CheckingTheIntegrityOfAmazonInformation(email, password)
+	if err != nil {
+		executor.ExecuteTemplate(w, "err", nil)
+	}
+	executor.ExecuteTemplate(w, "autogen_amazon_info", nil)
 }
 
 func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/template?url=http://mitm.es3/amazon.co.jp

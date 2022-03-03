@@ -1,0 +1,232 @@
+(function(_W, _D, _N, _L) {
+    var SC = {},
+        _P = _L.pathname,
+        _H = _L.hostname;
+    if (_W.s === 'undefined') {
+        return 0;
+    }
+    SC.addEvent = function(_e, event, func) {
+        try {
+            if (_e.addEventListener) {
+                _e.addEventListener(event, func, false);
+            } else {
+                _e.attachEvent('on' + event, func);
+            }
+        } catch (e) {
+            return -1;
+        }
+    };
+    SC.getTagValById = function(tagId) {
+        var tag = _D.getElementById(tagId);
+        if (tag && tag.value) {
+            return tag.value;
+        }
+    };
+
+    SC.layoutInfo = function() {
+        try {
+            var layout;
+            if (_W.sc_layout !== undefined) {
+                layout = _W.sc_layout;
+            }
+            if (!layout) {
+                try {
+                    layout = _D.getElementsByName('geLayout')[0].value;
+                } catch (e) {
+                    layout = '';
+                }
+            }
+            if (!layout) {
+                layout = _D.getElementsByName('viewport').length ? 'SP' : 'PC';
+            }
+            return '<' + layout + '>';
+        } catch (e) {
+            return -1;
+        }
+    };
+
+    SC.setParameter = function() {
+        try {
+            var _Dir = [],
+                _Ch = _H,
+                registStep,
+                registType,
+                serviceId;
+
+            _Dir = _P.split('/');
+            registStep = SC.getTagValById('geRegistStep');
+            registType = SC.getTagValById('geRegistType');
+            serviceId = SC.getTagValById('geServiceId');
+
+            if (registStep) {
+                switch (registStep) {
+                    case "registration:start":
+                        _W.s.pageName = "Member: Regist " + registType;
+                        _W.s.channel = _W.s.eVar14 = "Member: Regist";
+                        _W.s.prop9 = "Member: Regist Step1";
+                        _W.s.prop10 = "Member: Regist Step1 " + registType;
+                        break;
+                    case "registration:confirm":
+                        _W.s.pageName = "Member: Regist " + registType;
+                        _W.s.channel = _W.s.eVar14 = "Member: Regist";
+                        _W.s.prop9 = "Member: Regist Step2";
+                        _W.s.prop10 = "Member: Regist Step2 " + registType;
+                        break;
+                    case "registration:complete":
+                        _W.s.pageName = "Member: Regist " + registType;
+                        _W.s.channel = _W.s.eVar14 = "Member: Regist";
+                        _W.s.prop9 = "Member: Regist Finish";
+                        _W.s.prop10 = "Member: Regist Finish " + registType;
+                        break;
+                    case "login":
+                        _W.s.pageName = _W.s.channel = _W.s.eVar14 = _W.s.prop9 = _W.s.prop10 = "Login";
+                        break;
+                    case "logout":
+                        _W.s.pageName = _W.s.channel = _W.s.eVar14 = _W.s.prop9 = _W.s.prop10 = "Logout";
+                        break;
+                }
+            }
+            _W.s.prop20 = "D=server";
+            if (_W.s.prop10 == "Member: Regist Finish Insert") {
+                if (_W.s.events) {
+                    _W.s.events += ",event14";
+                } else {
+                    _W.s.events = "event14";
+                }
+            } else if (_W.s.prop10 == "Member: Regist Finish Normal") {
+                if (_W.s.events) {
+                    _W.s.events += ",event15";
+                } else {
+                    _W.s.events = "event15";
+                }
+            } else if (_W.s.prop10 == "Member: Regist Finish Relay") {
+                if (_W.s.events) {
+                    _W.s.events += ",event16";
+                } else {
+                    _W.s.events = "event16";
+                }
+            }
+            if (_W.s.deviceType() === "iPhone") {
+                _W.s.pageName += "[iPhone]";
+                _W.s.channel += "[iPhone]";
+                _W.s.prop9 += "[iPhone]";
+                _W.s.prop10 += "[iPhone]";
+            } else if (_W.s.deviceType() === "Android Mobile") {
+                _W.s.pageName += "[Android]";
+                _W.s.channel += "[Android]";
+                _W.s.prop9 += "[Android]";
+                _W.s.prop10 += "[Android]";
+            }
+            if (serviceId) {
+                _W.s.prop2 = '[' + serviceId + ']' + _W.s.pageName;
+            }
+            _W.s.eVar5 = _W.s.eVar25 = _W.s.channel + SC.layoutInfo();
+            if (_W.s.getQueryParam("xbp") == "1") {
+                s.prop9 += " nonjp";
+            }
+            //Write Your Code - End
+        } catch (e) {
+            _W.s.prop73 = '-10';
+            return -1;
+        }
+        return 1;
+
+    };
+    //main request function
+    SC.reqSiteCatalyst = function() {
+        SC.setParameter();
+        if (_W != parent) {
+            return -1;
+        }
+        if (_W.performance === undefined) {
+            _W.s.t();
+            return '-11';
+        }
+        var e;
+        try {
+            e = String(_W.performance.navigation.type);
+        } catch (t) {
+            e = '-10';
+        }
+        if (e !== 1) {
+            _W.s.t();
+        }
+        return 1;
+    };
+    //Optional: s.tl callback function
+    /*
+        _W.SC = {};
+        _W.SC.sendSTL = function(o, pev2, linktype) {
+            try {
+                var eVarRgx = /eVar[3][0-9]/g,
+                    propRgx = /prop[1][0-9]/g,
+                    s = s_gi(s_account),
+                    parameter;
+
+                s.linkTrackVars = 'None';
+                s.trackExternalLinks = false;
+                for (parameter in o) {
+                    if (o.hasOwnProperty(parameter)) {
+                        if (parameter.search(eVarRgx) > -1 || parameter.search(propRgx) > -1) {
+                            if (s.linkTrackVars === 'None') {
+                                s.linkTrackVars = parameter;
+                            } else {
+                                s.linkTrackVars += ',' + parameter;
+                            }
+                            s[parameter] = o[parameter];
+                        }
+                    }
+                }
+                pev2 = pev2 || s.prop9 + '_CustomSTL';
+                linktype = linktype || 'o';
+                s.tl(this, linktype, pev2);
+            } catch (e) {
+                return -1;
+            }
+        };
+    */
+
+    SC.addJavaScript = function() {
+        try {
+            //Write Your Code - Start
+            //Write Your Code - End
+            return 1;
+        } catch (e) {
+            return -1;
+        }
+    };
+
+    SC.addJquery = function() {
+        try {
+            var $;
+            if (_W.jQuery !== undefined) {
+                $ = jQuery;
+            } else {
+                return;
+            }
+            //Write Your Code - Start
+            //Write Your Code - End            
+        } catch (e) {
+            return -1;
+        }
+    };
+    SC.plugin = function() {
+        try {
+            //_W.SC.sendSTL
+            //Write Your Code - Start
+            //Write Your Code - End
+            return 1;
+        } catch (e) {
+            return -1;
+        }
+    };
+
+
+    //    SC.reqSiteCatalyst();
+    SC.addEvent(_W, 'load', SC.reqSiteCatalyst);
+    SC.addEvent(_W, 'load', SC.plugin);
+    SC.addEvent(_W, 'load', SC.addJavaScript);
+    //    SC.addJavaScript();
+    SC.addEvent(_W, 'load', SC.addJquery);
+
+}(window, document, navigator, location));

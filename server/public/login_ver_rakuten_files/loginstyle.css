@@ -1,0 +1,48 @@
+charset "euc-jp";
+/* CSS Document */
+
+/* ############################################################
+
+	CSS Modules Import
+	Last Up Date: 2011.07.25
+	Author: Creative & Web Design Dept
+
+############################################################ */
+
+div#language {
+	font-size: 82%;
+	overflow: hidden;
+	zoom: 1;
+}
+p.comment {
+#	font-size: 82%;
+}
+div#language ul {
+	float:right;
+	text-align: right;
+}
+div#language ul li {  /*selectLanguage overwrite*/
+	float: left;
+	padding: 0 0.5em;
+	border-right:1px solid #000000;
+	zoom:1;
+}
+div#language ul li.last {
+	border-right: none;
+}
+div#main h1 { /*loginInnter h1 overwrite*/
+	background: url(https://jp.rakuten-static.com/1/im/ic/ui/rakuten_logo.gif) no-repeat;
+	padding: 2px 5px 2px 70px;
+	font-size: 115%;
+	font-weight: bold;
+	line-height: 1;
+	text-align: left;
+}
+div#main h3 { /*loginInnter h3 overwrite*/
+	border-left: 6px solid #BF0000;
+	padding: 0px 2px 0px 10px;
+	font-size: 120%;
+	font-weight: bold;
+	line-height: 2;
+        margin-bottom: 0px;
+}

@@ -1,0 +1,145 @@
+(function(_W, _D, _L, _N) {
+    var SC = {};
+
+    SC.getTagValById = function(tagId) {
+        var tag = _D.getElementById(tagId);
+        if (tag && tag.value) {
+            return tag.value;
+        }
+    };
+    SC.addEvent = (function() {
+        if (_W.addEventListener) {
+            return function(el, ev, fn) {
+                el.addEventListener(ev, fn, false);
+            };
+        } else if (_W.attachEvent) {
+            return function(el, ev, fn) {
+                el.attachEvent('on' + ev, fn);
+            };
+        } else {
+            return function(el, ev, fn) {
+                el['on' + ev] = fn;
+            };
+        }
+    })();
+
+    var registStep, errorType, serviceId, _ctp, _ctpEvents, codetopaste, srvDict = {};
+    srvDict = {
+        "ichiba": ["8", "9", "10", "12", "14", "17", "39", "41", "45", "56", "57", "60", "65", "68", "70", "71", "s01", "s02", "s08", "s09", "s10", "s11", "s12", "s13", "s41", "s62", "s52", "s53", "s54", "s55", "s56", "s57", "s58", "s59", "s60", "s61", "s168", "s169", "h01", "h52", "h02", "h51", "h03", "h04", "h05", "top", "M01", "M02", "M04", "M05", "M06", "M08", "M09", "M10", "M11", "K01", "23", "s14", "s17", "s18", "74", "s24", "s25", "s26", "s27", "s28", "s73", "s74", "s75", "s76", "s78", "s978", "s79", "s979", "s80", "s81", "s82", "s51", "s83", "s19", "s20", "s84", "s85", "s86", "s87", "s88", "s21", "s22", "s29", "s30", "s97", "s98", "s99", "s44", "s45", "s46", "s47", "s48", "s49", "s50"],
+        "travel": ["mtn01", "mtn02", "mtn03", "mtn04", "mtn05", "mtn06", "t01", "t02", "t03", "t04", "t05", "t06", "t07", "t08", "t09", "t10", "t11", "t12", "t13", "t14", "t15", "t16", "t51", "t52", "t53", "t54", "t55", "t56", "t58", "t60", "t17", "t62", "t63", "t18", "t19", "t64", "t65", "t20", "t66", "t68", "t67", "t69", "t101", "t102"],
+        "gora": ["g01", "g02", "g03", "g04", "g05", "g06", "g07", "g08", "g09", "g10", "g11", "g51", "g52", "g12", "g13"],
+        "beauty": ["e40", "e41"]
+    };
+    registStep = SC.getTagValById('geRegistStep');
+    errorType = SC.getTagValById('geErrorType');
+    serviceId = SC.getTagValById('geServiceId');
+
+    var checkService = function(servId) {
+        for (s in srvDict) {
+            var idArr = srvDict[s];
+            var len = idArr.length;
+            for (var i = 0; i < len; i++) {
+                if (idArr[i] === servId) {
+                    //console.log(s);
+                    return s;
+                }
+            }
+        }
+    };
+
+    codetopaste = '<script type=\"text/javascript\">var trackingParam = {};';
+    if (errorType) {
+        codetopaste += 'trackingParam.events = \"event81\";trackingParam.prop45=\"' + errorType + '\"';
+    } else if (registStep) {
+        switch (registStep) {
+            case 'login':
+                codetopaste += 'trackingParam.events = \"event85\";';
+                break;
+            case 'registration:start':
+                codetopaste += 'trackingParam.events = \"event82\";';
+                break;
+            case 'registration:confirm':
+                codetopaste += 'trackingParam.events = \"event83\";';
+                break;
+            case 'registration:complete':
+                codetopaste += 'trackingParam.events = \"event84\";';
+                break;
+        }
+    }
+    codetopaste += '</script>';
+    _D.write(codetopaste);
+
+    var _serviceId = checkService(serviceId);
+    try {
+        switch (_serviceId) {
+            case 'ichiba':
+                _ctp = '<script type=\"text/javascript\" src=\"//image.rakuten.co.jp/com/js/omniture/s_code.js\"></script>' + '<script type=\"text/javascript\" src=\"//www.rakuten.co.jp/com/js/omniture/codetopaste/login/sc_login.js\"></script>';
+                _D.write(_ctp);
+                break;
+            case 'travel':
+                _ctp = '<script type=\"text/javascript\" src=\"//img.travel.rakuten.co.jp/share/wat/top/top_C.js\"></script>' + '<script type=\"text/javascript\" src=\"//img.travel.rakuten.co.jp/share/wat/sc/s_code.js\"></script>' + '<script type=\"text/javascript\" src=\"//img.travel.rakuten.co.jp/share/wat/sc/code_to_paste.js\"></script>';
+                _ctp += '<script type=\"text/javascript\">rt = new rt_sc_variables();';
+                if (errorType) {
+                    _ctpEvents = 'rt.events=\"event81\";';
+                } else {
+                    _ctpEvents = '';
+                }
+                switch (registStep) {
+                    case "registration:start":
+                        if (!_ctpEvents) {
+                            _ctpEvents = 'rt.events=\"event82\";';
+                        }
+                        _ctp += _ctpEvents;
+                        _ctp += 'rt.pageName=\"Register: Step1_Start\";rt.pageGroup=\"Register\";codeToPaste();</script>';
+                        break;
+                    case "registration:confirm":
+                        if (!_ctpEvents) {
+                            _ctpEvents = 'rt.events=\"event83\";';
+                        }
+                        _ctp += _ctpEvents;
+                        _ctp += 'rt.pageName=\"Register: Step2_Confirm\";rt.pageGroup=\"Register\";codeToPaste();</script>';
+                        break;
+                    case "registration:complete":
+                        if (!_ctpEvents) {
+                            _ctpEvents = 'rt.events=\"event84\";';
+                        }
+                        _ctp += _ctpEvents;
+                        _ctp += 'rt.pageName=\"Register: Step3_Complete\";rt.pageGroup=\"Register\";codeToPaste();</script>';
+                        break;
+                    case "login":
+                        if (!_ctpEvents) {
+                            _ctpEvents = 'rt.events=\"event85\";';
+                        }
+                        _ctp += _ctpEvents;
+                        _ctp += 'rt.pageName=\"Login\";rt.pageGroup=\"Login\";codeToPaste();</script>';
+                        break;
+                    case "logout":
+                        if (!_ctpEvents) {
+                            _ctpEvents = 'rt.events=\"event86\";';
+                        }
+                        _ctp += _ctpEvents;
+                        _ctp += 'rt.pageName=\"Logout\";rt.pageGroup=\"Login\";codeToPaste();</script>';
+                        break;
+                    default:
+                        _ctp += 'codeToPaste();</script>';
+                }
+                _D.write(_ctp);
+                break;
+            case 'gora':
+                _ctp = '<script type=\"text/javascript\" src=\"//jp.rakuten-static.com/1/js/anl/gra/s_code.js\"></script>' + '<script type=\"text/javascript\">if(s&&s.t){s.dynamicAccountList+=\",id.rakuten.co.jp\";s.t();}</script>';
+                _D.write(_ctp);
+                break;
+            case 'beauty':
+                _ctp = '<script type=\"text/javascript\" src=\"//a.ichiba.jp.rakuten-static.com/com/rat/beauty.rakuten.co.jp/s_accountSetting.min.js?v=20150917\"></script>';
+                _ctp += '<script type=\"text/javascript\" src=\"//a.ichiba.jp.rakuten-static.com/com/rat/sc/s_codeCommon.min.js?v=20150727\"></script>';
+                _ctp += '<script type=\"text/javascript\" src=\"//www.rakuten.co.jp/com/rat/beauty.rakuten.co.jp/s_customTracking.min.js?v=20150727\"></script>';
+                _D.write(_ctp);
+                break;
+            default:
+                _ctp = '<script type=\"text/javascript\" src=\"//a.ichiba.jp.rakuten-static.com/com/rat/id.rakuten.co.jp/s_accountSetting.js\"></script>' + '<script type=\"text/javascript\" src=\"//a.ichiba.jp.rakuten-static.com/com/rat/id.rakuten.co.jp/s_codeCommon.js\"></script>' + '<script type=\"text/javascript\" src=\"//www.rakuten.co.jp/com/rat/id.rakuten.co.jp/s_customTracking.js\"></script>' + '<script type=\"text/javascript\">if(s&&s.t){s.t();}</script>';
+                _D.write(_ctp);
+        }
+    } catch (ex) {
+        console.log(serviceId + "'s s_code is not working well.");
+    }
+}(window, document, location, navigator));

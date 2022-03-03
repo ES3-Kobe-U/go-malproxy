@@ -1,0 +1,108 @@
+$(document).ready(function(){
+
+  $('.text')
+    .blur(function(){
+      var $$=$(this);
+      if($$.val()=='' || $$.val()==$$.attr('title') + '  '){
+        $$.css('color', '#999999')
+          .val($$.attr('title') + '  ');
+      }
+    })
+    .focus(function(){
+      var $$=$(this);
+      $$.css('color', '#000000');
+      if($$.val()==$$.attr('title') + '  '){
+        $$.val('');
+      }
+    })
+    .parents('form:first').submit(function(){
+      $('.text').each(function(){
+        var $$=$(this);
+        if($$.val()==$$.attr('title') + '  '){
+          $$.triggerHandler('focus');
+        }
+      });
+    }).end()
+    .blur();
+    $('input[name=email]').change(function(){
+      $('input[name=email2]').val('');
+    });
+
+	// 以下3つはグローバル変数っぽく利用
+	var DATA_PREF = $('#data_prefecture');
+	var PREF_INPUT = $('#prefecture_input');
+	var PREF_SELECT = $('#prefecture_select');
+
+	/**
+	 * 渡されたjQueryオブジェクトが表示されているならtrueを返す
+	 * @param obj 判定するjQueryオブジェクト
+	*/
+	function isShow( obj ){
+		if( obj.css('display') == 'none' ){
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Inputのほうを表示する
+	*/
+	function showInput(){
+			PREF_INPUT.show().attr('name', 'prefecture');
+			PREF_SELECT.hide().attr('name', 'prefecture_select');
+	}
+
+	/**
+	 * Selectのほうを表示する
+	*/
+	function showSelect(){
+			PREF_INPUT.hide().attr('name', 'prefecture_input');
+			PREF_SELECT.show().attr('name', 'prefecture');
+	}
+
+	/**
+	 * selectの内容を渡されたJQueryオブジェクトの内容で置き換える
+	 * @param prefs 県情報が入ったDIVタグのJQueryオブジェクト
+	*/
+	function setPrefs( prefs ){
+		PREF_SELECT.children().remove(); // optionを全部削除
+		
+		PREF_SELECT.append('<option value="">' + DATA_PREF.attr("message") + '</option>')
+		// optionを追加していきます
+		prefs.children().each(function(){
+			var val = this.firstChild.nodeValue;  // $(this).test(); でもいい
+			PREF_SELECT.append('<option value="' + val + '">' + val + '</option>');
+		});
+	}
+
+	/**
+	 * 国が選択されたときに呼ばれる関数
+	 */
+	function changeCountry(){
+		var country = $(this).val();
+		if(country == ""){
+			showInput();
+			return;
+		}
+		var prefs = DATA_PREF.children("[name=" + country + "]");
+		if(prefs.size() == 0 ){
+			// データが無いのでテキストボックス表示
+			showInput();
+		}else{
+			// データがあったのでセレクトを表示
+			setPrefs(prefs);
+			showSelect();
+		}
+	}
+
+	// 国が選択されたときのイベント追加
+	$('select[name=country]').change( changeCountry ).change();
+
+	// 初期選択値の設定
+	if( PREF_INPUT.val() != '' && isShow(PREF_SELECT) ){
+		var val = PREF_INPUT.val();
+		PREF_INPUT.val('');			// セレクトボックスが表示されてるのでテキストボックスは空にする
+		PREF_SELECT.val(val);
+	}
+
+});

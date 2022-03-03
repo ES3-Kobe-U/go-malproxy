@@ -1,0 +1,45 @@
+function tls12Callback(jsonObj)
+{
+  try {
+    var strJson = JSON.stringify(jsonObj);
+    JSON.parse(strJson, function(key, value) {
+      if (key === 'tls12') {
+
+        var tls2Support = '1'
+        var tls2NotSupport = '0'
+        if (value.toString() === tls2NotSupport) {
+          (function(D, N) {
+            'use strict';
+
+            var isSP = /iPhone|iPod|Android.+Mobile/.test(N.userAgent);
+            var body = D.body;
+            var elem = D.createElement('div');
+            var link = '../../tls.html';
+            elem.style.background = '#ffdbdb';
+            elem.style.textAlign = 'center';
+            if (isSP) {
+              elem.innerHTML = '<a href="' + link + '" style="display: block; border: 1px solid #ff3939; text-decoration: none !important;"><table style="margin: 12px; border-collapse: collapse; border-spacing: 0px;"><tr>'
+              + '<td style="padding: 0px; vertical-align: middle;"><img src="/com/img/tls/pc-sign-info-f.png" width="22" height="19" style="margin-right: 12px; border: 0px; vertical-align: middle;"></td>'
+              + '<td style="padding: 0px; text-align: left; vertical-align: middle; color: #ff3939; font-size: 14px; line-height: 1.33;">ご利用中のブラウザ・スマートフォンなどで、楽天のウェブサービスが順次お使い頂けなくなります。</td>'
+              + '<td style="padding: 0px; vertical-align: middle;"><img src="/com/img/tls/sp-arrow-right.png" width="9" height="15" style="margin: 0px 6px 0px 10px; border: 0px; vertical-align: middle;"></td>'
+              + '</tr></table></a>';
+            } else {
+              elem.innerHTML = '<a href="' + link + '" style="display: block; width: 100%; height: 64px; overflow: hidden; text-decoration: none !important;">'
+              + '<span style="line-height: 64px;"><img src="/com/img/tls/pc-sign-info-f.png" width="22" height="19" style="margin-right: 6px; border: 0px; vertical-align: middle;"></span>'
+              + '<span style="line-height: 64px; color: #ff3939; font-weight: bold; font-size: 15px;">ご利用中のブラウザ・パソコンなどで、楽天のウェブサービスが順次お使い頂けなくなります。</span>'
+              + '<span style="line-height: 64px; padding: 2px 8px 2px 12px; border: 1px solid #ff3939; border-radius: 4px; color: #ff3939; font-size: 13px; white-space: nowrap;"><span>詳細</span><img src="/com/img/tls/pc-arrow.png" width="7" height="12" style="margin-left: 4px; border: 0px; vertical-align: middle;"></span>'
+              + '</a>';
+            }
+            body.insertBefore(elem, body.firstChild);
+          })(document, navigator);
+
+        } else if (value.toString() === tls2Support) {
+          // tls2 supported
+        } else {
+          // unknown value
+        }
+      }
+    });
+  } catch (ignored) {
+  }
+}

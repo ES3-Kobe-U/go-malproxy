@@ -1,0 +1,114 @@
+/*
+  CAPTCHA / CHALLENGER
+*/
+
+#challenger, .challenger {
+    position: relative;
+}
+
+img.c-text {
+    margin: 0 5px 8px 0;
+    border: 1px solid #eee;
+}
+
+img.c-refresh {
+    margin-right: 5px;
+    width: 23px;
+    position: absolute;
+    left: 252px;
+    top: 15px;
+}
+
+img.c-refresh:hover {
+    cursor: pointer;
+}
+
+a.c-help {
+    position: absolute;
+    left: 252px;
+    top: 48px;
+}
+
+span.c-old-ie {
+    display: none;
+    margin-bottom: 5px;
+}
+
+input.c-input {
+    border: 1px solid #bbb;
+    border-radius: 1px;
+    position: relative;
+    display: block;
+    float: right;
+    padding: 10px;
+    width: 100%;
+    background: transparent;
+    color: #333;
+    font-family: Arial, sans-serif;
+    -webkit-appearance: none;
+    margin-bottom: 15px;
+}
+
+input.c-pin-input {
+    border: 1px solid #bbb;
+    border-radius: 1px;
+    position: relative;
+    display: block;
+    padding: 10px;
+    width: 300px;
+    background: transparent;
+    color: #333;
+    font-family: Arial, sans-serif;
+    -webkit-appearance: none;
+    margin-bottom: 15px;
+}
+
+.pin-verifyphone-input {
+    width: 200px;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.pin-send-txt {
+    border:none;
+}
+
+.pin-modifyPhone-txt {
+    display: inline-block;
+    color: blue;
+    cursor:pointer;
+}
+
+.pin-resend-btn, .pin-send-btn {
+    display: inline-block;
+    border:1px solid #CCC;
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+    cursor:pointer;
+    vertical-align:middle;
+    text-align: center;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.pin-disabled {
+    background:grey;
+    color:white;
+}
+
+.pin-enabled {
+    background:red;
+    color:white;
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.6);
+}
+
+.smshelp-txt, .phonehelp-txt {
+    font-size: smaller;
+}
+
+.phone-value {
+    display: inline-block;
+}
