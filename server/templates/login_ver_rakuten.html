@@ -4,11 +4,6 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
-
-
-
   <meta http-equiv="Content-Language" content="ja">
   <title>【楽天】ログイン</title>
   <meta http-equiv="Content-Script-Type" content="text/javascript">
@@ -29,56 +24,13 @@
 </head>
 
 <body id="confirm">
-
   <script src="/static/login_ver_rakuten_files/tls12.js.download" charset="utf-8"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <!-- SiteCatalyst tags -->
   <input type="hidden" name="geGeneralTags" id="geServiceId" value="top">
   <input type="hidden" name="geGeneralTags" id="geRegistType" value="">
   <input type="hidden" name="geGeneralTags" id="geRegistStep" value="login">
-
   <input type="hidden" name="geGeneralTags" id="geErrorType" value="">
-
-
   <!-- End SiteCatalyst tags -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <div align="center">
     <!-- ID title utility -->
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -115,35 +67,17 @@
       </tbody>
     </table>
     <!-- /Header line -->
-
   </div>
-
   <noscript>
     <p class="noJS">JavaScriptが無効の為、一部のコンテンツをご利用いただけません。<br>JavaScriptの設定を有効にしてからご利用いただきますようお願いいたします。※JavaScriptの設定方法は<a
         href="https://ichiba.faq.rakuten.net/detail/000006432">楽天市場お問い合わせQ&A</a>をご覧ください。</p>
   </noscript>
-
-
   <div id="container">
-
-
-
-
-
-
-
-
-
-
-
-
-
     <script language="JavaScript">
-< !--
-        function setLang(lang) {
-          document.formLang1.lang.value = lang;
-          document.formLang1.submit();
-        }
+      function setLang(lang) {
+        document.formLang1.lang.value = lang;
+        document.formLang1.submit();
+      }
       function setLangJa() {
         setLang("ja");
       }
@@ -153,30 +87,19 @@
       function setLangCn() {
         setLang("zh-cn");
       }
-//-->
     </script>
     <form id="formLang1" name="formLang1" action="https://grp01.id.rakuten.co.jp/rms/nid/loginfwdi" method="post">
       <input type="hidden" name="lang" value="">
       <input type="hidden" name="service_id" value="top">
       <div id="language" align="right">
-
         日本語
-
         |
-
         <a href="javascript:setLangEn();">English</a>
-
         |
-
         <a href="javascript:setLangCn();">简体中文</a>
-
-
       </div>
     </form>
-
-
     <div id="contents">
-
       <table width="100%" style="background-color: #eeeeee; padding:5px 5px; font-size: 13px;">
         <tbody>
           <tr>
@@ -191,30 +114,17 @@
           </tr>
         </tbody>
       </table>
-
-
       <div id="main">
-
-
-
         <p class="comment"><img src="/static/login_ver_rakuten_files/Rakuten_pc_20px@2x.png" alt="Rakuten" class="logo"
             width="67" height="20">このサービスをご利用になるにはログインしてください。</p>
-
-
-
-
         <div id="mainLeft">
-
           <div class="login">
-
             <form name="LoginForm" method="post" action="https://grp01.id.rakuten.co.jp/rms/nid/logini"
               autocomplete="off" id="loginForm">
-
               <input type="hidden" name="service_id" value="top">
               <div id="loginInner">
                 <h3>楽天会員ログイン</h3>
                 <table class="loginBox">
-
                   <tbody>
                     <tr>
                       <td class="loginBoxName">
@@ -224,14 +134,10 @@
                         </p>
                       </td>
                       <td class="loginBoxValue">
-
-
-
                         <input type="text" name="u" maxlength="100" size="25" value="" class="textBox"
                           id="loginInner_u">
                       </td>
                     </tr>
-
                     <tr>
                       <td class="loginBoxName">
                         <p class="fomName">
@@ -240,13 +146,10 @@
                         </p>
                       </td>
                       <td class="loginBoxValue">
-
                         <input type="password" name="p" maxlength="128" size="25" value="" class="textBox"
                           id="loginInner_p">
                       </td>
                     </tr>
-
-
                     <tr>
                       <td colspan="2">
                         <div id="challenger"><input name="cres" id="cres" type="hidden" value="a6yhmSFcznne77qt"></div>
@@ -269,21 +172,15 @@
 
                   </tbody>
                 </table>
-
                 <p>
                   <input type="submit" name="submit" value="ログイン" onclick="preventMultiClicks(this)"
                     class="loginButton">
                 </p>
-
                 <p class="center">
-
                   <input type="hidden" name="pp_version" value="20170213">
-
                   <a target="_blank" href="https://privacy.rakuten.co.jp/">個人情報保護方針</a>に同意してログイン <span
                     style="color: #666666;">(2017年2月13日改定)</span>
-
                 </p>
-
                 <input type="checkbox" name="auto_logout" value="true" class="checkBox" id="auto_logout">
                 <label for="auto_logout">ブラウザを閉じるときオートログインを無効にする</label>
                 <a
@@ -291,18 +188,12 @@
                     src="/static/login_ver_rakuten_files/pop.gif" width="11" height="11" alt="新しいウィンドウが開きます"
                     class="popUp"></a>
                 <p class="caption">(共有のコンピュータをお使いの方は選択してください)</p>
-
                 <script type="text/javascript" language="JavaScript">
-  < !--
-  var focusControl = document.forms["LoginForm"].elements["u"];
-
+                  var focusControl = document.forms["LoginForm"].elements["u"];
                   if (focusControl.type != "hidden") {
                     focusControl.focus();
                   }
-  // -->
                 </script>
-
-
               </div><input type="hidden" name="device_fp" value="32e9416b967061a7d7b8c4967235feb5"><input type="hidden"
                 name="time_zone" value="-540"><input type="hidden" name="os_info" value="Win32">
             </form>
@@ -313,16 +204,8 @@
               <li><img src="/static/login_ver_rakuten_files/pop.gif" width="11" height="11" alt="新しいウィンドウが開きます"
                   class="popUp"><a href="https://ichiba.faq.rakuten.net/detail/000006766" target="_blank">ヘルプ</a></li>
             </ul>
-
           </div>
-
-
-
-
-
         </div>
-
-
         <div id="extra">
           <h2>まだ楽天会員に登録されていない方</h2>
           <div id="newEntry">
@@ -335,18 +218,7 @@
             <p class="caption"><a href="https://member.id.rakuten.co.jp/r/membership.html" target="_blank">楽天会員とは？</a>
             </p>
           </div>
-
-
-
           <div class="box">
-
-
-
-
-
-
-
-
             <dl id="info">
               <dt>ログインできないときのヒント</dt>
               <dd>
@@ -360,45 +232,16 @@
                 </ul>
               </dd>
             </dl>
-
           </div>
-
-
-
-
         </div>
-
-
-
       </div>
-
-
     </div>
   </div>
-
-
   <div align="center">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <font size="-1"><a href="https://privacy.rakuten.co.jp/" target="_blank">個人情報保護方針</a></font><br>
     <hr size="1" style="display:block;">
-
     <font size="-1">© Rakuten Group, Inc.</font>
-
   </div>
-
   <!-- SiteCatalyst tags -->
   <script type="text/javascript" src="/static/login_ver_rakuten_files/sc_scode_switch.js.download"></script>
   <script type="text/javascript">var trackingParam = {}; trackingParam.events = "event85";</script>
@@ -406,30 +249,16 @@
     src="/static/login_ver_rakuten_files/t(1).gif" name="s_i_rakutendev" style="position:absolute" width="1" height="1">
   <script type="text/javascript" src="/static/login_ver_rakuten_files/sc_login.js.download"></script>
   <!-- End SiteCatalyst tags -->
-
   <!-- Rakuten Analytics Tracker (RAT) tags -->
-
-
-
-
-
-
-
-
-
-
   <input type="hidden" name="rat" id="ratAccountId" value="429">
   <input type="hidden" name="rat" id="ratServiceId" value="1">
   <input type="hidden" name="rat" id="ratPageLayout" value="pc">
   <input type="hidden" name="rat" id="ratSiteSection" value="id">
   <input type="hidden" name="rat" id="ratAdobeSiteSection" value="login">
-
   <input type="hidden" name="rat" id="ratCustomParameters" value="">
-
   <input type="hidden" name="rat" id="ratCvEvent" value="">
   <script type="text/javascript" src="/static/login_ver_rakuten_files/rat-main.js.download"></script>
   <!-- End of RAT tags -->
-
   <script type="text/javascript">
     var n = 0;
     var dfpDelayId = setInterval(function () {
@@ -442,33 +271,19 @@
         n++;
       }
     }, 100);
-
-
     window.onpageshow = function (event) {
       if (event.persisted) {
         window.location.reload();
       }
     };
-
     function preventMultiClicks(obj) {
       obj.value = "ログイン中...";
 
       setTimeout(function () {
         obj.disabled = true;
       }, 0);
-
     }
-
   </script>
-
-
-
-
-
-
-
-
-
 </body>
 
 </html>
