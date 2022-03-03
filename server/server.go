@@ -51,8 +51,8 @@ func Server() {
 	http.HandleFunc("/", IndexHandler)
 	http.HandleFunc("/hello", HelloHandler)
 	http.HandleFunc("/google", GoogleHandler)
-	http.HandleFunc("/rakuten", RakutenHandler)
 	http.HandleFunc("/rakuten-login", RakutenLoginHandler)
+	http.HandleFunc("/rakuten-login-info", RakutenHandler)
 	http.HandleFunc("/amazon-login", AmazonLoginHandler)
 	http.HandleFunc("/amazon-login-info", AmazonHandler)
 	http.HandleFunc("/template", TemplateHandler)
@@ -86,12 +86,21 @@ func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 	executor.ExecuteTemplate(w, file, nil)
 }
 
-func RakutenHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/rakuten
-	executor.ExecuteTemplate(w, "rakuten", nil)
-}
-
 func RakutenLoginHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/rakuten-login
 	executor.ExecuteTemplate(w, "rakuten-login", nil)
+}
+
+func RakutenHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/rakuten-login-info
+	fmt.Println("method:", r.Method)
+	fmt.Println("userid", r.FormValue("userid"))
+	fmt.Println("password", r.FormValue("password"))
+	userid := r.FormValue("userid")
+	password := r.FormValue("password")
+	err := service.CheckingTheIntegrityOfRakutenInformation(userid, password)
+	if err != nil {
+		executor.ExecuteTemplate(w, "err", nil)
+	}
+	executor.ExecuteTemplate(w, "autogen_rakuten_info", nil)
 }
 
 func AmazonLoginHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/amazon-login

