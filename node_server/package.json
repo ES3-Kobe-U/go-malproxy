@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "website-scraper": "^5.0.0"
-  },
-  "type": "module"
-}
