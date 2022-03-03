@@ -9,3 +9,7 @@ node_modules
 
 #楽天
 rakuten
+
+#others
+login_ver_amazon.html
+login_ver_rakuten.html
