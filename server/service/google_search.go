@@ -47,8 +47,8 @@ func RewriteUrlOfGoogleSearch(fqdn string) error {
 		log.Fatal(err)
 		return err
 	}
-	res := `{{define "autogen_rewrite_` + fqdn + `"}}` + string(data) + `{{end}}`                           //データを文字列に変換
-	rewrite := strings.Replace(res, `<a href="/url?q=`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
+	res := `{{define "autogen_rewrite_` + fqdn + `"}}` + string(data) + `{{end}}`      //データを文字列に変換
+	rewrite := strings.Replace(res, `<a href="/url?q=`, `<a href="/template?url=`, -1) //文字列の置き換え
 	err = ioutil.WriteFile("server/templates/autogen_rewrite_"+fqdn+".html", []byte(rewrite), os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
