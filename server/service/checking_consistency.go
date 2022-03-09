@@ -22,7 +22,6 @@ func CheckingTheIntegrityOfAmazonInformation(email string, password string) erro
 	var res0 []byte
 	var res1 []byte
 	var res2 []byte
-	var res3 []byte
 	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
 	defer cancel()
 	task1 := chromedp.Tasks{ //タスクリストの作成
@@ -53,23 +52,26 @@ func CheckingTheIntegrityOfAmazonInformation(email string, password string) erro
 	}
 	err := chromedp.Run(ctx, task1)
 	if err != nil {
-		err := AmaoznCaptcha(email, password)
-		if err != nil {
-			return err
-		}
+		return err
 	}
-	task2 := chromedp.Tasks{
-		chromedp.CaptureScreenshot(&res3),
-	}
-	err = chromedp.Run(ctx, task2) //セッションが維持されているかの確認
+	err = os.WriteFile("server/templates/img/res0.png", res0, 0644)
+	//err = os.WriteFile("./res0.png", res0, 0644)
 	if err != nil {
 		return err
 	}
-	os.WriteFile("server/templates/img/res0.png", res0, 0644)
-	os.WriteFile("server/templates/img/res1.png", res1, 0644)
-	os.WriteFile("server/templates/img/res2.png", res2, 0644)
+	err = os.WriteFile("server/templates/img/res1.png", res1, 0644)
+	//err = os.WriteFile("./res1.png", res1, 0644)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile("server/templates/img/res2.png", res2, 0644)
+	//err = os.WriteFile("./res2.png", res2, 0644)
+	if err != nil {
+		return err
+	}
 	output := `{{define "autogen_amazon_info"}}` + res + `{{end}}`
 	err = os.WriteFile("server/templates/autogen_amazon_login.html", []byte(output), 0644)
+	//err = os.WriteFile("./autogen_amazon_login.html", []byte(output), 0644)
 	if err != nil {
 		return err
 	}
