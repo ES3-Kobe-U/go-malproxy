@@ -12,7 +12,12 @@ git:
 	git commit -m ${MS}
 	git push origin HEAD
 
+# linux用
 clean:
 	find server/templates -name 'autogen*' -delete
-	find server/service -name 'autogen*' -delete
-	find server/service -name '*.png' -delete
+	find server/templates/img -name '*.png' -delete
+
+# windows用
+del:
+	del D:\go-malproxy\server\templates\autogen*.html
+	del D:\go-malproxy\server\templates\img\*.png
