@@ -66,9 +66,9 @@ func ReadDataAndRewiteURL(fqdn string) error {
 	if err != nil {
 		return err
 	}
-	rew := strings.Replace(res, `<a href="`, `<a href="http://localhost:3333/template?url=`, -1) //文字列の置き換え
-	rew = strings.Replace(rew, `<a href='`, `<a href='http://localhost:3333/template?url=`, -1)  //文字列の置き換え
-	rew = strings.Replace(rew, `pa3.min.js`, ``, -1)                                             //楽天のCORSを回避する為に削除
+	rew := strings.Replace(res, `<a href="`, `<a href="/template?url=`, -1) //文字列の置き換え
+	rew = strings.Replace(rew, `<a href='`, `<a href='/template?url=`, -1)  //文字列の置き換え
+	rew = strings.Replace(rew, `pa3.min.js`, ``, -1)                        //楽天のCORSを回避する為に削除
 	rew = strings.Replace(rew, `<div
     irc="MembershipHeader"
     data-show-new="true"
