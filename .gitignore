@@ -13,3 +13,6 @@ rakuten
 #others
 # login_ver_amazon.html
 # login_ver_rakuten.html
+
+#画像ファイル
+*.png
