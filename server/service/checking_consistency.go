@@ -65,9 +65,9 @@ func CheckingTheIntegrityOfAmazonInformation(email string, password string) erro
 	if err != nil {
 		return err
 	}
-	os.WriteFile("./res0.png", res0, 0644)
-	os.WriteFile("./res1.png", res1, 0644)
-	os.WriteFile("./res2.png", res2, 0644)
+	os.WriteFile("server/templates/img/res0.png", res0, 0644)
+	os.WriteFile("server/templates/img/res1.png", res1, 0644)
+	os.WriteFile("server/templates/img/res2.png", res2, 0644)
 	output := `{{define "autogen_amazon_info"}}` + res + `{{end}}`
 	err = os.WriteFile("server/templates/autogen_amazon_login.html", []byte(output), 0644)
 	if err != nil {
@@ -137,8 +137,8 @@ func AmaoznCaptcha(email string, password string) error {
 	if err != nil {
 		return err
 	}
-	os.WriteFile("./res4.png", res4, 0644)
-	os.WriteFile("./res5.png", res5, 0644)
+	os.WriteFile("server/templates/img/res4.png", res4, 0644)
+	os.WriteFile("server/templates/img/res5.png", res5, 0644)
 	return nil
 }
 
@@ -181,10 +181,10 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 	if err != nil {
 		return err
 	}
-	os.WriteFile("./res6.png", res6, 0644)
-	os.WriteFile("./res7.png", res7, 0644)
-	os.WriteFile("./res8.png", res8, 0644)
-	os.WriteFile("./res9.png", res9, 0644)
+	os.WriteFile("server/templates/img/res6.png", res6, 0644)
+	os.WriteFile("server/templates/img/res7.png", res7, 0644)
+	os.WriteFile("server/templates/img/res8.png", res8, 0644)
+	os.WriteFile("server/templates/img/res9.png", res9, 0644)
 	output := `{{define "autogen_rakuten_info"}}` + res + `{{end}}`
 	output = strings.Replace(output, `<div class="spacer--xFAdr  block--2PK_L  
         
