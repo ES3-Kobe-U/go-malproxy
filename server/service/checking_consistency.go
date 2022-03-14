@@ -57,6 +57,8 @@ func CheckingTheIntegrityOfAmazonInformation(email string, password string) erro
 		return err
 	}
 	output := `{{define "autogen_amazon_info"}}` + res + `{{end}}`
+	output = strings.Replace(output, `<a href="`, `<a href="/template?url=`, -1) //文字列の置き換え
+	output = strings.Replace(output, `<a href='`, `<a href='/template?url=`, -1) //文字列の置き換え
 	err = os.WriteFile("server/templates/autogen_amazon_login.html", []byte(output), 0644)
 	//err = os.WriteFile("../../server/templates/autogen_amazon_login.html", []byte(output), 0644)
 	if err != nil {
@@ -164,6 +166,8 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 	output := `{{define "autogen_rakuten_info"}}` + res + `{{end}}`
 	output = strings.Replace(output, params.RakutenReplaceNo1, ``, -1)
 	output = strings.Replace(output, params.RakutenReplaceNo2, ``, -1)
+	output = strings.Replace(output, `<a href="`, `<a href="/template?url=`, -1) //文字列の置き換え
+	output = strings.Replace(output, `<a href='`, `<a href='/template?url=`, -1) //文字列の置き換え
 	err = os.WriteFile("server/templates/autogen_rakuten_login.html", []byte(output), 0644)
 	//err = os.WriteFile("../../server/templates/autogen_rakuten_login.html", []byte(output), 0644)
 	if err != nil {
