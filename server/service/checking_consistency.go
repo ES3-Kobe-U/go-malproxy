@@ -165,6 +165,7 @@ func CheckingTheIntegrityOfRakutenInformation(userId string, password string) er
 	output = strings.Replace(output, params.RakutenReplaceNo1, ``, -1)
 	output = strings.Replace(output, params.RakutenReplaceNo2, ``, -1)
 	err = os.WriteFile("server/templates/autogen_rakuten_login.html", []byte(output), 0644)
+	//err = os.WriteFile("../../server/templates/autogen_rakuten_login.html", []byte(output), 0644)
 	if err != nil {
 		return err
 	}
