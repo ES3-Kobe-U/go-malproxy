@@ -58,9 +58,3 @@ func TestCheckingTheIntegrityOfRakutenInformation(t *testing.T) {
 		})
 	}
 }
-
-func TestGoRakuten(t *testing.T) {
-	if err := GoRakuten(); err != nil {
-		t.Errorf("err:%v", err)
-	}
-}
