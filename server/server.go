@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -36,6 +37,8 @@ const templateGlob = "server/templates/*.html"
 const debug = true
 
 var executor TemplateExecutor
+var ctx context.Context
+var services service.Service = &service.Contents{&ctx}
 
 func Server() {
 	if debug {
@@ -96,9 +99,12 @@ func RakutenHandler(w http.ResponseWriter, r *http.Request) { // http://localhos
 	fmt.Println("password", r.FormValue("password"))
 	userid := r.FormValue("userid")
 	password := r.FormValue("password")
-	err := service.CheckingTheIntegrityOfRakutenInformation(userid, password)
+	err := services.CheckingTheIntegrityOfRakutenInformation(userid, password)
 	if err != nil {
 		executor.ExecuteTemplate(w, "err", nil)
+	}
+	if err := services.CheckingContextContents(); err != nil {
+		log.Fatal(err)
 	}
 	executor.ExecuteTemplate(w, "autogen_rakuten_info", nil)
 }
@@ -113,9 +119,12 @@ func AmazonHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 	fmt.Println("password", r.FormValue("password"))
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-	err := service.CheckingTheIntegrityOfAmazonInformation(email, password)
+	err := services.CheckingTheIntegrityOfAmazonInformation(email, password)
 	if err != nil {
 		executor.ExecuteTemplate(w, "err", nil)
+	}
+	if err := services.CheckingContextContents(); err != nil {
+		log.Fatal(err)
 	}
 	executor.ExecuteTemplate(w, "autogen_amazon_info", nil)
 }
