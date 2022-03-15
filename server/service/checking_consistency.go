@@ -22,9 +22,9 @@ Amazon用の処理
 func (c *Contents) CheckingTheIntegrityOfAmazonInformation(email string, password string) error {
 	var res string
 	var picture []byte
-	var cancel context.CancelFunc
-	*c.CTX, cancel = chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
-	defer cancel()
+	//var cancel context.CancelFunc
+	*c.CTX, _ = chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
+	//defer cancel()
 	task1 := chromedp.Tasks{ //タスクリストの作成
 		chromedp.Navigate("https://www.amazon.co.jp/?&tag=hydraamazonav-22&ref=pd_sl_2ykkalld4i_e&adgrpid=54841807378&hvpone=&hvptwo=&hvadid=289239574720&hvpos=&hvnetw=g&hvrand=13443261105670128409&hvqmt=e&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=1009565&hvtargid=kwd-333588672930&hydadcr=15460_10908920&gclid=Cj0KCQiAjJOQBhCkARIsAEKMtO0jVYrB9RxzmNKNeCPzZE0CB_TUL10D5UonY9FkHd4maUGPDrYDe4UaAnhwEALw_wcB"),
 		chromedp.WaitReady("body"),
@@ -73,9 +73,9 @@ func (c *Contents) CheckingTheIntegrityOfAmazonInformation(email string, passwor
 楽天用の処理
 */
 func (c *Contents) CheckingTheIntegrityOfRakutenInformation(userId string, password string) error {
-	var cancel context.CancelFunc
-	*c.CTX, cancel = chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
-	defer cancel()
+	//var cancel context.CancelFunc
+	*c.CTX, _ = chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
+	//defer cancel()
 	var res string
 	err := chromedp.Run(*c.CTX,
 		chromedp.Navigate("https://grp01.id.rakuten.co.jp/rms/nid/vc?__event=login&service_id=top"),
