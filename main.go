@@ -6,5 +6,4 @@ import (
 
 func main() {
 	server.Server()
-	//server.EchoServer() //Echoサーバー
 }

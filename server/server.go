@@ -1,19 +1,19 @@
 package server
 
 import (
-	"html/template"
 	"net/http"
+	"text/template"
 
-	"github.com/go-malproxy/server/handler"
+	"github.com/go-malproxy/server/templates"
 )
 
 func Server() {
-	if handler.Debug {
-		handler.Executor = handler.DebugTemplateExecutor{Glob: handler.TemplateGlob}
+	if templates.Debug {
+		templates.Executor = templates.DebugTemplateExecutor{Glob: templates.TemplateGlob}
 
 	} else {
-		handler.Executor = handler.ReleaseTemplateExecutor{
-			Template: template.Must(template.ParseGlob(handler.TemplateGlob)),
+		templates.Executor = templates.ReleaseTemplateExecutor{
+			Template: template.Must(template.ParseGlob(templates.TemplateGlob)),
 		}
 	}
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("server/public/"))))

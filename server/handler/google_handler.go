@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-malproxy/server/service"
+	"github.com/go-malproxy/server/templates"
 )
 
 func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/google
@@ -13,14 +14,17 @@ func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 	word := r.FormValue("params")
 	res, err := service.GoogleSearch(word)
 	if err != nil {
-		Executor.ExecuteTemplate(w, "err", nil)
+
+		templates.Executor.ExecuteTemplate(w, "err", nil)
 	}
 	fmt.Println("res:", res)
 	err = service.RewriteUrlOfGoogleSearch(res)
 	if err != nil {
-		Executor.ExecuteTemplate(w, "err", nil)
+
+		templates.Executor.ExecuteTemplate(w, "err", nil)
 	}
 	file := "autogen_rewrite_" + res
 	fmt.Println("file:", file)
-	Executor.ExecuteTemplate(w, file, nil)
+
+	templates.Executor.ExecuteTemplate(w, file, nil)
 }

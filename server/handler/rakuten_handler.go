@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/go-malproxy/server/templates"
 )
 
 func RakutenLoginHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/rakuten-login
-	Executor.ExecuteTemplate(w, "rakuten-login", nil)
+	templates.Executor.ExecuteTemplate(w, "rakuten-login", nil)
 }
 
 func RakutenHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/rakuten-login-info
@@ -18,10 +20,12 @@ func RakutenHandler(w http.ResponseWriter, r *http.Request) { // http://localhos
 	password := r.FormValue("password")
 	err := services.CheckingTheIntegrityOfRakutenInformation(userid, password)
 	if err != nil {
-		Executor.ExecuteTemplate(w, "err", nil)
+
+		templates.Executor.ExecuteTemplate(w, "err", nil)
 	}
 	if err := services.CheckingContextContents(); err != nil {
 		log.Fatal(err)
 	}
-	Executor.ExecuteTemplate(w, "autogen_rakuten_info", nil)
+
+	templates.Executor.ExecuteTemplate(w, "autogen_rakuten_info", nil)
 }
