@@ -58,7 +58,7 @@ ReadDataAndRewiteURL関数
 FQDNを引数にとって、FQDN.htmlファイル内にある"https://"を"http://mitm.es3/"に置き換え、その結果を文字列として返す。
 */
 func ReadDataAndRewiteURL(fqdn string) error {
-	data, err := ioutil.ReadFile("server/templates/autogen_" + fqdn + ".html") //指定HTMLファイルの読み込み TODO: 後でディレクトリを変更
+	data, err := ioutil.ReadFile("server/templates/autogen_" + fqdn + ".html") //指定HTMLファイルの読み込み
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -68,23 +68,23 @@ func ReadDataAndRewiteURL(fqdn string) error {
 	if err != nil {
 		return err
 	}
-	rew := strings.Replace(res, `<a href="`, `<a href="/template?url=`, -1) //文字列の置き換え
-	rew = strings.Replace(rew, `<a href='`, `<a href='/template?url=`, -1)  //文字列の置き換え
-	rew = strings.Replace(rew, `pa3.min.js`, ``, -1)                        //楽天のCORSを回避する為に削除
-	rew = strings.Replace(rew, params.RakutenLoginCode, params.ReplaceRakutenLoginCode, -1)
+	res = strings.Replace(res, `<a href="`, `<a href="/template?url=`, -1) //文字列の置き換え
+	res = strings.Replace(res, `<a href='`, `<a href='/template?url=`, -1) //文字列の置き換え
+	res = strings.Replace(res, `pa3.min.js`, ``, -1)                       //楽天のCORSを回避する為に削除
+	res = strings.Replace(res, params.RakutenLoginCode, params.ReplaceRakutenLoginCode, -1)
 	for i := range Url {
-		if judge := strings.Contains(rew, Url[i]); judge {
+		if judge := strings.Contains(res, Url[i]); judge {
 			Former := Url[i]
 			Url[i] = strings.Replace(Url[i], "&amp;", "ANDANDAND", -1)
 			Url[i] = strings.Replace(Url[i], "&", "ANDANDAND", -1)
 			Url[i] = strings.Replace(Url[i], "%26", "ANDANDAND", -1)
 			Url[i] = strings.Replace(Url[i], "=", "EQUALEQUALEQUAL", -1)
-			rew = strings.Replace(rew, Former, Url[i], -1)
+			res = strings.Replace(res, Former, Url[i], -1)
 		}
 	}
-	rew = strings.Replace(rew, `&amp;`, `ANDANDAND`, -1)
-	rew = strings.Replace(rew, `%26`, `ANDANDAND`, -1)
-	err = ioutil.WriteFile("server/templates/autogen_rewrite_"+fqdn+".html", []byte(rew), os.ModePerm)
+	res = strings.Replace(res, `&amp;`, `ANDANDAND`, -1)
+	res = strings.Replace(res, `%26`, `ANDANDAND`, -1)
+	err = ioutil.WriteFile("server/templates/autogen_rewrite_"+fqdn+".html", []byte(res), os.ModePerm)
 	if err != nil {
 		return err
 	}
