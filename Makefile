@@ -1,6 +1,12 @@
 run:
-	@ echo "Boot main server. click http://localhost:3333/"
+	@ echo "Boot main server. click http://localhost:8081/"
 	go run main.go
+
+docker-build:
+	docker build -t go-malproxy .
+
+docker-run:
+	docker run -it -p 8081:8080 go-malproxy 
 
 all:
 	git add .
