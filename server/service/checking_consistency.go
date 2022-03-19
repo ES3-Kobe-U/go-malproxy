@@ -29,13 +29,13 @@ func (c *Contents) CheckingTheIntegrityOfAmazonInformation(email string, passwor
 		chromedp.Navigate("https://www.amazon.co.jp/?&tag=hydraamazonav-22&ref=pd_sl_2ykkalld4i_e&adgrpid=54841807378&hvpone=&hvptwo=&hvadid=289239574720&hvpos=&hvnetw=g&hvrand=13443261105670128409&hvqmt=e&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=1009565&hvtargid=kwd-333588672930&hydadcr=15460_10908920&gclid=Cj0KCQiAjJOQBhCkARIsAEKMtO0jVYrB9RxzmNKNeCPzZE0CB_TUL10D5UonY9FkHd4maUGPDrYDe4UaAnhwEALw_wcB"),
 		chromedp.WaitReady("body"),
 		chromedp.Click(`a[data-nav-role='signin']`, chromedp.ByQuery),
-		chromedp.Sleep(time.Millisecond * 500),
+		chromedp.Sleep(time.Second * 1),
 		chromedp.SetValue(`ap_email`, email, chromedp.ByID),
 		chromedp.Click(`continue`, chromedp.ByID),
-		chromedp.Sleep(time.Millisecond * 500),
+		chromedp.Sleep(time.Second * 1),
 		chromedp.SetValue(`ap_password`, password, chromedp.ByID),
 		chromedp.Click(`signInSubmit`, chromedp.ByID),
-		chromedp.Sleep(time.Second * 1),
+		chromedp.Sleep(time.Second * 2),
 		chromedp.CaptureScreenshot(&picture),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			node, err := dom.GetDocument().Do(ctx)
@@ -84,7 +84,7 @@ func (c *Contents) CheckingTheIntegrityOfRakutenInformation(userId string, passw
 		chromedp.SetValue(`document.querySelector("#loginInner_p")`, password, chromedp.ByJSPath),
 		chromedp.Click(`document.querySelector("#auto_logout")`, chromedp.ByJSPath),
 		chromedp.Click(`document.querySelector("#loginInner > p:nth-child(3) > input")`, chromedp.ByJSPath),
-		chromedp.Sleep(time.Second*12),
+		chromedp.Sleep(time.Second*15),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			node, err := dom.GetDocument().Do(ctx)
 			if err != nil {
