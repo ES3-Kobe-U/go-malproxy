@@ -8,7 +8,7 @@ autogen_*.html
 node_modules
 
 #楽天
-rakuten
+#rakuten
 
 #others
 # login_ver_amazon.html
