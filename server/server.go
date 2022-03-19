@@ -18,5 +18,5 @@ func Server() {
 	}
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("server/public/"))))
 	InitRouter()
-	http.ListenAndServe(":3333", nil)
+	http.ListenAndServe(":8081", nil)
 }
