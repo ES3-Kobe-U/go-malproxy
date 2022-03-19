@@ -6,7 +6,7 @@ docker-build:
 	docker build -t go-malproxy .
 
 docker-run:
-	docker run -it -p 8081:8080 go-malproxy 
+	docker run -it -p 8080:8081 go-malproxy 
 
 all:
 	git add .
