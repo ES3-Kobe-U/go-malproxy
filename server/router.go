@@ -14,5 +14,6 @@ func InitRouter() {
 	http.HandleFunc("/rakuten-login-info", handler.RakutenHandler)
 	http.HandleFunc("/amazon-login", handler.AmazonLoginHandler)
 	http.HandleFunc("/amazon-login-info", handler.AmazonHandler)
+	http.HandleFunc("/amazon-captcha-info", handler.AmazonCaptchaInfo)
 	http.HandleFunc("/template", handler.TemplateHandler)
 }
