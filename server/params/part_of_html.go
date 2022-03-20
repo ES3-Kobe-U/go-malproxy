@@ -115,3 +115,9 @@ var AmazonReplaceDivNo1 = `<div id="nav-global-location-toaster-script-container
           </script>
 </div>`
 var AmazonReplaceDivNo2 = ``
+
+var AmazonCaptchaParamNo1 = `<form name="signIn" method="post" novalidate="" action="https://www.amazon.co.jp/ap/signin" class="auth-validate-form auth-real-time-validation a-spacing-none"`
+var AmazonCaptchaParamNo1Replace = `<form name="signIn" method="get" action="/amazon-captcha-info" class="auth-validate-form auth-real-time-validation a-spacing-none"`
+
+var AmazonCaptchaParamNo2 = `<input type="password" maxlength="1024" id="ap_password" name="password"`
+var AmazonCaptchaParamNo2Replace = `<input type="password" maxlength="1024" id="ap_password" name="catpchapass"`
