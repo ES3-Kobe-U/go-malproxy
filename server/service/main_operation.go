@@ -71,6 +71,7 @@ func ReadDataAndRewiteURL(fqdn string) error {
 	res = strings.Replace(res, `<a href="`, `<a href="/template?url=`, -1) //文字列の置き換え
 	res = strings.Replace(res, `<a href='`, `<a href='/template?url=`, -1) //文字列の置き換え
 	res = strings.Replace(res, `pa3.min.js`, ``, -1)                       //楽天のCORSを回避する為に削除
+	res = strings.Replace(res, params.AmazonReplaceDivNo1, params.AmazonReplaceDivNo2, -1)
 	res = strings.Replace(res, params.RakutenLoginCode, params.ReplaceRakutenLoginCode, -1)
 	for i := range Url {
 		if judge := strings.Contains(res, Url[i]); judge {

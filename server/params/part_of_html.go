@@ -100,3 +100,18 @@ var RakutenReplaceNo2 = `<div irc="CommonHeaderMall" data-url="https://www.rakut
 }
 
     ]">`
+
+var AmazonReplaceDivNo1 = `<div id="nav-global-location-toaster-script-container" class="nav-progressive-content">
+    <!-- NAVYAAN-GLOW-NAV-TOASTER -->
+          <script>
+              P.when('glow-toaster-strings').execute(function(S) {
+                S.load({"glow-toaster-address-change-error":"エラーが発生し、アドレスが更新されていません。もう一度やり直してください。","glow-toaster-unknown-error":"エラーが発生しました。もう一度やり直してください。"});
+             });
+          </script>
+          <script>
+              P.when('glow-toaster-manager').execute(function(M) {
+                M.create({"pageType":"Search","aisTransitionState":"in","rancorLocationSource":"IP_GEOLOCATION"})
+              });
+          </script>
+</div>`
+var AmazonReplaceDivNo2 = ``
