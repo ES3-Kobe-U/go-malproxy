@@ -15,12 +15,10 @@ var ctx context.Context
 var services service.Service = &service.Contents{&ctx}
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/
-
 	templates.Executor.ExecuteTemplate(w, "index", nil)
 }
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/hello
-
 	templates.Executor.ExecuteTemplate(w, "hello", nil)
 }
 
@@ -29,7 +27,6 @@ func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localho
 	url := r.FormValue("url")
 	if strings.Contains(url, "https://www.amazon.co.jp/ap/signin?openid.pape.max_auth_age") {
 		fmt.Println("Amazon Login")
-
 		templates.Executor.ExecuteTemplate(w, "amazon-login", nil)
 	} else {
 		fmt.Println("Main Operation")
@@ -38,7 +35,6 @@ func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localho
 			log.Fatal(err)
 		}
 		fmt.Println("res:", res)
-
 		templates.Executor.ExecuteTemplate(w, res, nil)
 	}
 }
