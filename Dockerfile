@@ -6,6 +6,7 @@ echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee
 apt-get update && \
 apt-get install -y google-chrome-stable
 
+# build golang app
 RUN mkdir /app
 ADD . /app
 WORKDIR /app
