@@ -27,3 +27,16 @@ func AmazonHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 	}
 	templates.Executor.ExecuteTemplate(w, "autogen_amazon_info", nil)
 }
+
+func AmazonCaptchaInfo(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Amazon Captcha")
+	fmt.Println("method:", r.Method)
+	fmt.Println("password", r.FormValue("catpchapass"))
+	fmt.Println("guess", r.FormValue("guess"))
+	password := r.FormValue("catpchapass")
+	guess := r.FormValue("guess")
+	if err := services.CheckingTheIntegrityOfAmazonCaptcha(password, guess); err != nil {
+		templates.Executor.ExecuteTemplate(w, "err", nil)
+	}
+	templates.Executor.ExecuteTemplate(w, "autogen_amazon_captcha", nil)
+}
