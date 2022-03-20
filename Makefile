@@ -1,5 +1,8 @@
 run:
-	@ echo "Boot main server. click http://localhost:8081/"
+	@echo "\033[35m Boot main server. Click the following URL. \033[m" 
+	@echo "\033[31m localhost     => http://localhost:8081/ \033[m"
+	@echo "\033[32m Digital Ocean => http://159.89.34.164:8081/ \033[m"
+	@echo "\033[33m Docker        => http://159.89.34.164:8080/ \033[m"
 	go run main.go
 
 docker-build:
