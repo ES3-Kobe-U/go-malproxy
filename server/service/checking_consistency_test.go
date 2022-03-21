@@ -11,9 +11,10 @@ func TestCheckingTheIntegrityOfAmazonInformation(t *testing.T) {
 	if err != nil {
 		t.Errorf("err:%v", err)
 	}
-	var ctx context.Context
+	var parent context.Context
+	var children context.Context
 	var services Service
-	services = &Contents{&ctx}
+	services = &Contents{&parent, &children}
 	if services == nil {
 		t.Errorf("services -> nil")
 	}

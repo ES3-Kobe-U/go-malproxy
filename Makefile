@@ -10,6 +10,7 @@ run-local-docker:
 	@echo "\033[33m Docker        => http://localhost:8080/ \033[m"
 
 deploy:
+	docker-compose build
 	docker-compose up -d
 	@echo "\033[35m Boot main server. Click the following URL. \033[m" 
 	@echo "\033[33m Docker on Digital Ocean        => http://159.89.34.164:8080/ \033[m"

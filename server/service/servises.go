@@ -4,4 +4,5 @@ type Service interface {
 	CheckingTheIntegrityOfAmazonInformation(email string, password string) error
 	CheckingTheIntegrityOfRakutenInformation(userId string, password string) error
 	CheckingContextContents() error
+	CheckingTheIntegrityOfAmazonCaptcha(password string, guess string) error
 }
