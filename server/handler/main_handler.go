@@ -11,19 +11,19 @@ import (
 	"github.com/go-malproxy/server/templates"
 )
 
-var parent, children context.Context
-var services service.Service = &service.Contents{Parent: &parent, Children: &children}
+var ctx context.Context
+var services service.Service = &service.Contents{IsAmazon: false, IsRakuten: false}
 
-func IndexHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	templates.Executor.ExecuteTemplate(w, "index", nil)
 }
 
-func HelloHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/hello
+func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	templates.Executor.ExecuteTemplate(w, "hello", nil)
 }
 
-func TemplateHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/template?url=http://mitm.es3/amazon.co.jp
-	fmt.Println("\x1b[31mURL:\x1b[0m", r.FormValue("url")) //取得したパラメータの表示
+func TemplateHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("\x1b[31mURL:\x1b[0m", r.FormValue("url"))
 	url := r.FormValue("url")
 	if strings.Contains(url, "https://www.amazon.co.jp/ap/signin?openid.pape.max_auth_age") {
 		fmt.Println("Amazon Login")
