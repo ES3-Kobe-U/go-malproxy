@@ -11,8 +11,8 @@ import (
 	"github.com/go-malproxy/server/templates"
 )
 
-var ctx context.Context
-var services service.Service = &service.Contents{&ctx}
+var parent, children context.Context
+var services service.Service = &service.Contents{Parent: &parent, Children: &children}
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/
 	templates.Executor.ExecuteTemplate(w, "index", nil)
