@@ -8,9 +8,9 @@ import (
 	"github.com/go-malproxy/server/templates"
 )
 
-func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost:3333/google
-	fmt.Println("method:", r.Method) //リクエストを取得するメソッド
-	fmt.Println("検索ワード:", r.FormValue("params"))
+func GoogleHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("method:", r.Method)
+	fmt.Println("params:", r.FormValue("params"))
 	word := r.FormValue("params")
 	res, err := service.GoogleSearch(word)
 	if err != nil {
@@ -24,7 +24,5 @@ func GoogleHandler(w http.ResponseWriter, r *http.Request) { // http://localhost
 		templates.Executor.ExecuteTemplate(w, "err", nil)
 	}
 	file := "autogen_rewrite_" + res
-	fmt.Println("file:", file)
-
 	templates.Executor.ExecuteTemplate(w, file, nil)
 }
