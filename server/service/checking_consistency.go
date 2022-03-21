@@ -9,43 +9,48 @@ import (
 	"time"
 
 	"github.com/chromedp/cdproto/dom"
-	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
 	"github.com/go-malproxy/server/params"
-	"github.com/sirupsen/logrus"
 )
 
 type Contents struct {
-	Parent   *context.Context
-	Children *context.Context
+	IsAmazon  bool
+	IsRakuten bool
 }
 
 /*
 Amazon用の処理
 */
-func (c *Contents) CheckingTheIntegrityOfAmazonInformation(email string, password string) error {
+func (c *Contents) CheckingTheIntegrityOfAmazonInformation(ctx context.Context, email string, password string) (context.Context, error) {
 	var res string
 	var picture []byte
-	var cancel context.CancelFunc
-	*c.Parent, cancel = chromedp.NewContext(context.Background(), chromedp.WithDebugf(logrus.Printf))
-	defer cancel()
+	ctx, _ = chromedp.NewContext(context.Background())
 	task1 := chromedp.Tasks{ //タスクリストの作成
-		network.Enable(),
-		network.SetExtraHTTPHeaders(network.Headers(map[string]interface{}{
-			"User-Agent": "Mozilla",
-		})),
 		chromedp.Navigate("https://www.amazon.co.jp/?&tag=hydraamazonav-22&ref=pd_sl_2ykkalld4i_e&adgrpid=54841807378&hvpone=&hvptwo=&hvadid=289239574720&hvpos=&hvnetw=g&hvrand=13443261105670128409&hvqmt=e&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=1009565&hvtargid=kwd-333588672930&hydadcr=15460_10908920&gclid=Cj0KCQiAjJOQBhCkARIsAEKMtO0jVYrB9RxzmNKNeCPzZE0CB_TUL10D5UonY9FkHd4maUGPDrYDe4UaAnhwEALw_wcB"),
 		chromedp.WaitReady("body"),
 		chromedp.Click(`a[data-nav-role='signin']`, chromedp.ByQuery),
 		chromedp.Sleep(time.Second * 1),
 		chromedp.SetValue(`ap_email`, email, chromedp.ByID),
-		chromedp.Sleep(time.Second * 1),
+		chromedp.Sleep(time.Millisecond * 500),
 		chromedp.Click(`continue`, chromedp.ByID),
 		chromedp.Sleep(time.Second * 1),
 		chromedp.SetValue(`ap_password`, password, chromedp.ByID),
-		chromedp.Sleep(time.Second * 1),
+		chromedp.Sleep(time.Millisecond * 500),
 		chromedp.Click(`signInSubmit`, chromedp.ByID),
-		chromedp.Sleep(time.Second * 2),
+		chromedp.Sleep(time.Millisecond * 1500),
+	}
+	if err := chromedp.Run(ctx, task1); err != nil {
+		log.Fatalf("Task1 -> Run Err:%v\n", err)
+		return nil, err
+	}
+	if err := chromedp.Run(ctx,
+		chromedp.Reload(),
+	); err != nil {
+		log.Fatalf("Run Err:%v\n", err)
+		return nil, err
+	}
+	ctx2, _ := context.WithTimeout(ctx, 30*time.Second)
+	if err := chromedp.Run(ctx2,
 		chromedp.CaptureScreenshot(&picture),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			node, err := dom.GetDocument().Do(ctx)
@@ -60,16 +65,14 @@ func (c *Contents) CheckingTheIntegrityOfAmazonInformation(email string, passwor
 			}
 			return nil
 		}),
-	}
-	if err := chromedp.Run(*c.Parent, task1); err != nil {
+	); err != nil {
 		log.Fatalf("Run Err:%v\n", err)
-		return err
+		return nil, err
 	}
-	*c.Children, cancel = chromedp.NewContext(*c.Parent)
-	defer cancel()
+
 	if err := os.WriteFile("server/templates/img/amazonInfo.png", picture, 0644); err != nil {
 		log.Fatalf("os.WriteFile amazonInfo.png Err:%v\n", err)
-		return err
+		return nil, err
 	}
 	output := `{{define "autogen_amazon_info"}}` + res + `{{end}}`
 	output = strings.Replace(output, `<a href="`, `<a href="/template?url=`, -1) //文字列の置き換え
@@ -78,32 +81,24 @@ func (c *Contents) CheckingTheIntegrityOfAmazonInformation(email string, passwor
 	output = strings.Replace(output, params.AmazonCaptchaParamNo2, params.AmazonCaptchaParamNo2Replace, -1)
 	if err := os.WriteFile("server/templates/autogen_amazon_login.html", []byte(output), 0644); err != nil {
 		log.Fatalf("os.WriteFile autogen_amazon_login.html Err:%v\n", err)
-		return err
+		return nil, err
 	}
-	return nil
+	return ctx, nil
 }
 
-func (c *Contents) CheckingTheIntegrityOfAmazonCaptcha(password string, guess string) error {
+func (c *Contents) CheckingTheIntegrityOfAmazonCaptcha(ctx context.Context, password string, guess string) (context.Context, error) {
 	var res string
 	var picture []byte
-	if err := chromedp.Run(*c.Parent,
-		chromedp.Reload(),
-	); err != nil {
-		log.Fatalf("Reload Err:%v\n", err)
-	}
-	if err := chromedp.Run(*c.Children); err != nil {
-		log.Fatalf("Init Run Err:%v\n", err)
-		return err
-	}
-	if err := chromedp.Run(*c.Parent,
+	fmt.Println("ctx -----> ", ctx)
+	if err := chromedp.Run(ctx,
 		chromedp.CaptureScreenshot(&picture),
 	); err != nil {
 		log.Fatalf("Pict Err:%v\n", err)
-		return err
+		return nil, err
 	}
 	if err := os.WriteFile("server/templates/img/captchaInit.png", picture, 0644); err != nil {
 		log.Fatalf("os.WriteFile captchaInit.png Err:%v\n", err)
-		return err
+		return nil, err
 	}
 	taskListNo1 := chromedp.Tasks{
 		chromedp.SetValue(`document.querySelector("#ap_password")`, password, chromedp.ByJSPath),
@@ -127,13 +122,13 @@ func (c *Contents) CheckingTheIntegrityOfAmazonCaptcha(password string, guess st
 			return nil
 		}),
 	}
-	if err := chromedp.Run(*c.Children, taskListNo1); err != nil {
+	if err := chromedp.Run(ctx, taskListNo1); err != nil {
 		log.Fatalf("Run Err:%v\n", err)
-		return err
+		return nil, err
 	}
 	if err := os.WriteFile("server/templates/img/captchaNo1.png", picture, 0644); err != nil {
 		log.Fatalf("os.WriteFile captchaNo1.png Err:%v\n", err)
-		return err
+		return nil, err
 	}
 	output := `{{define "autogen_amazon_captcha"}}` + res + `{{end}}`
 	output = strings.Replace(output, `<a href="`, `<a href="/template?url=`, -1) //文字列の置き換え
@@ -142,20 +137,20 @@ func (c *Contents) CheckingTheIntegrityOfAmazonCaptcha(password string, guess st
 	output = strings.Replace(output, params.AmazonCaptchaParamNo2, params.AmazonCaptchaParamNo2Replace, -1)
 	if err := os.WriteFile("server/templates/autogen_amazon_captcha.html", []byte(output), 0644); err != nil {
 		log.Fatalf("os.WriteFile autogen_amazon_captcha.html Err:%v\n", err)
-		return err
+		return nil, err
 	}
-	return nil
+	return ctx, nil
 }
 
 /*
 楽天用の処理
 */
-func (c *Contents) CheckingTheIntegrityOfRakutenInformation(userId string, password string) error {
+func (c *Contents) CheckingTheIntegrityOfRakutenInformation(ctx context.Context, userId string, password string) (context.Context, error) {
 	var res string
 	var cancel context.CancelFunc
-	*c.Parent, cancel = chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
+	ctx, cancel = chromedp.NewContext(context.Background(), chromedp.WithBrowserOption())
 	defer cancel()
-	if err := chromedp.Run(*c.Parent,
+	if err := chromedp.Run(ctx,
 		chromedp.Navigate("https://grp01.id.rakuten.co.jp/rms/nid/vc?__event=login&service_id=top"),
 		chromedp.WaitReady("body"),
 		chromedp.SetValue(`document.querySelector("#loginInner_u")`, userId, chromedp.ByJSPath),
@@ -178,7 +173,7 @@ func (c *Contents) CheckingTheIntegrityOfRakutenInformation(userId string, passw
 		}),
 	); err != nil {
 		log.Fatalf("Run Err:%v\n", err)
-		return err
+		return nil, err
 	}
 	output := `{{define "autogen_rakuten_info"}}` + res + `{{end}}`
 	output = strings.Replace(output, params.RakutenReplaceNo1, ``, -1)
@@ -189,7 +184,7 @@ func (c *Contents) CheckingTheIntegrityOfRakutenInformation(userId string, passw
 	output = strings.Replace(output, params.RakutenLoginCode, params.ReplaceRakutenLoginCode, -1)
 	if err := os.WriteFile("server/templates/autogen_rakuten_login.html", []byte(output), 0644); err != nil {
 		log.Fatalf("os.WriteFile autogen_rakuten_login.html Err:%v\n", err)
-		return err
+		return nil, err
 	}
-	return nil
+	return ctx, nil
 }

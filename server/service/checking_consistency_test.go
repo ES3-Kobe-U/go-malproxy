@@ -11,21 +11,20 @@ func TestCheckingTheIntegrityOfAmazonInformation(t *testing.T) {
 	if err != nil {
 		t.Errorf("err:%v", err)
 	}
-	var parent context.Context
-	var children context.Context
-	var services Service
-	services = &Contents{&parent, &children}
+	var services Service = &Contents{false, false}
 	if services == nil {
 		t.Errorf("services -> nil")
 	}
 	testcases := []struct {
 		name     string
+		ctx      context.Context
 		email    string
 		password string
 	}{
 		//各々テストケースを記述
 		{
 			name:     "example-00",
+			ctx:      context.Background(),
 			email:    amazonConfig.Email,
 			password: amazonConfig.Password,
 		},
@@ -33,7 +32,8 @@ func TestCheckingTheIntegrityOfAmazonInformation(t *testing.T) {
 
 	for _, testcase := range testcases {
 		t.Run(testcase.name, func(t *testing.T) {
-			if err := services.CheckingTheIntegrityOfAmazonInformation(testcase.email, testcase.password); err != nil {
+			_, err := services.CheckingTheIntegrityOfAmazonInformation(testcase.ctx, testcase.email, testcase.password)
+			if err != nil {
 				log.Fatal(err)
 			}
 		})
@@ -48,12 +48,14 @@ func TestCheckingTheIntegrityOfRakutenInformation(t *testing.T) {
 	}
 	testcases := []struct {
 		name     string
+		ctx      context.Context
 		userId   string
 		password string
 	}{
 		//各々テストケースを記述
 		{
 			name:     "example-00",
+			ctx:      context.Background(),
 			userId:   rakutenConfig.UserId,
 			password: rakutenConfig.Password,
 		},
@@ -61,7 +63,8 @@ func TestCheckingTheIntegrityOfRakutenInformation(t *testing.T) {
 
 	for _, testcase := range testcases {
 		t.Run(testcase.name, func(t *testing.T) {
-			if err := services.CheckingTheIntegrityOfRakutenInformation(testcase.userId, testcase.password); err != nil {
+			_, err := services.CheckingTheIntegrityOfRakutenInformation(testcase.ctx, testcase.userId, testcase.password)
+			if err != nil {
 				log.Fatal(err)
 			}
 		})
