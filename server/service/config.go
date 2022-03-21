@@ -18,7 +18,7 @@ type Amazon struct {
 
 func LoadRakutenEnv() (Rakuten, error) {
 	var rakutenConfig = Rakuten{}
-	err := godotenv.Load("data.env")
+	err := godotenv.Load("../config/config.env")
 	if err != nil {
 		return rakutenConfig, err
 	}
@@ -31,7 +31,7 @@ func LoadRakutenEnv() (Rakuten, error) {
 
 func LoadAmazonEnv() (Amazon, error) {
 	var amazonConfig = Amazon{}
-	err := godotenv.Load("data.env")
+	err := godotenv.Load("../config/config.env")
 	if err != nil {
 		return amazonConfig, err
 	}
