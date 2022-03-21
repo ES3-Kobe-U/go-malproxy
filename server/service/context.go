@@ -1,14 +1,15 @@
 package service
 
 import (
+	"context"
 	"io/ioutil"
 
 	"github.com/chromedp/chromedp"
 )
 
-func (c *Contents) CheckingContextContents() error {
+func (c *Contents) CheckingContextContents(ctx context.Context) error {
 	var imageBuf []byte
-	if err := chromedp.Run(*c.Parent,
+	if err := chromedp.Run(ctx,
 		chromedp.CaptureScreenshot(&imageBuf),
 	); err != nil {
 		return err
