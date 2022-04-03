@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/go-malproxy/server/templates"
@@ -23,9 +22,5 @@ func RakutenHandler(w http.ResponseWriter, r *http.Request) {
 		templates.Executor.ExecuteTemplate(w, "err", nil)
 	}
 	ctx = ctxRakuInfo
-	if err := services.CheckingContextContents(ctx); err != nil {
-		log.Fatal(err)
-	}
-
 	templates.Executor.ExecuteTemplate(w, "autogen_rakuten_info", nil)
 }
