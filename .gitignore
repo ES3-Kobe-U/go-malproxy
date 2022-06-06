@@ -13,6 +13,7 @@ node_modules
 #others
 # login_ver_amazon.html
 # login_ver_rakuten.html
+.vscode
 
 #画像ファイル
 *.png
