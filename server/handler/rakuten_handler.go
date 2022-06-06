@@ -17,7 +17,7 @@ func RakutenHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("password:", r.FormValue("password"))
 	userid := r.FormValue("userid")
 	password := r.FormValue("password")
-	ctxRakuInfo, err := services.CheckingTheIntegrityOfRakutenInformation(ctx, userid, password)
+	ctxRakuInfo, err := usecases.CheckingTheIntegrityOfRakutenInformation(ctx, userid, password)
 	if err != nil {
 		templates.Executor.ExecuteTemplate(w, "err", nil)
 	}

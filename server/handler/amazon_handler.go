@@ -17,7 +17,7 @@ func AmazonHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("password:", r.FormValue("password"))
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-	ctxAmaInfo, err := services.CheckingTheIntegrityOfAmazonInformation(ctx, email, password)
+	ctxAmaInfo, err := usecases.CheckingTheIntegrityOfAmazonInformation(ctx, email, password)
 	if err != nil {
 		templates.Executor.ExecuteTemplate(w, "err", nil)
 	}
@@ -32,7 +32,7 @@ func AmazonCaptchaInfo(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("guess   :", r.FormValue("guess"))
 	password := r.FormValue("catpchapass")
 	guess := r.FormValue("guess")
-	ctxAmaCap, err := services.CheckingTheIntegrityOfAmazonCaptcha(ctx, password, guess)
+	ctxAmaCap, err := usecases.CheckingTheIntegrityOfAmazonCaptcha(ctx, password, guess)
 	if err != nil {
 		templates.Executor.ExecuteTemplate(w, "err", nil)
 	}

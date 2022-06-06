@@ -4,21 +4,21 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-malproxy/server/service"
 	"github.com/go-malproxy/server/templates"
+	"github.com/go-malproxy/server/usecase"
 )
 
 func GoogleHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("method:", r.Method)
 	fmt.Println("params:", r.FormValue("params"))
 	word := r.FormValue("params")
-	res, err := service.GoogleSearch(word)
+	res, err := usecase.GoogleSearch(word)
 	if err != nil {
 
 		templates.Executor.ExecuteTemplate(w, "err", nil)
 	}
 	fmt.Println("res:", res)
-	err = service.RewriteUrlOfGoogleSearch(res)
+	err = usecase.RewriteUrlOfGoogleSearch(res)
 	if err != nil {
 
 		templates.Executor.ExecuteTemplate(w, "err", nil)

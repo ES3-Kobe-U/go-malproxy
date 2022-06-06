@@ -1,8 +1,8 @@
-package service
+package usecase
 
 import "context"
 
-type Service interface {
+type Usecase interface {
 	CheckingTheIntegrityOfAmazonInformation(ctx context.Context, email string, password string) (context.Context, error)
 	CheckingTheIntegrityOfRakutenInformation(ctx context.Context, userId string, password string) (context.Context, error)
 	CheckingContextContents(ctx context.Context) error

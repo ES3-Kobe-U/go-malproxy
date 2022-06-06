@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/go-malproxy/server/service"
 	"github.com/go-malproxy/server/templates"
+	"github.com/go-malproxy/server/usecase"
 )
 
 var ctx context.Context
-var services service.Service = &service.Contents{IsAmazon: false, IsRakuten: false}
+var usecases usecase.Usecase = &usecase.Contents{IsAmazon: false, IsRakuten: false}
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	templates.Executor.ExecuteTemplate(w, "index", nil)
@@ -30,7 +30,7 @@ func TemplateHandler(w http.ResponseWriter, r *http.Request) {
 		templates.Executor.ExecuteTemplate(w, "amazon-login", nil)
 	} else {
 		fmt.Println("Main Operation")
-		res, err := service.MainOperation(url)
+		res, err := usecase.MainOperation(url)
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -1,4 +1,4 @@
-package service
+package usecase
 
 import (
 	"context"
@@ -11,8 +11,8 @@ func TestCheckingTheIntegrityOfAmazonInformation(t *testing.T) {
 	if err != nil {
 		t.Errorf("err:%v", err)
 	}
-	var services Service = &Contents{false, false}
-	if services == nil {
+	var usecases Usecase = &Contents{false, false}
+	if usecases == nil {
 		t.Errorf("services -> nil")
 	}
 	testcases := []struct {
@@ -32,7 +32,7 @@ func TestCheckingTheIntegrityOfAmazonInformation(t *testing.T) {
 
 	for _, testcase := range testcases {
 		t.Run(testcase.name, func(t *testing.T) {
-			_, err := services.CheckingTheIntegrityOfAmazonInformation(testcase.ctx, testcase.email, testcase.password)
+			_, err := usecases.CheckingTheIntegrityOfAmazonInformation(testcase.ctx, testcase.email, testcase.password)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -42,7 +42,7 @@ func TestCheckingTheIntegrityOfAmazonInformation(t *testing.T) {
 
 func TestCheckingTheIntegrityOfRakutenInformation(t *testing.T) {
 	rakutenConfig, err := LoadRakutenEnv()
-	var services Service
+	var usecases Usecase
 	if err != nil {
 		t.Errorf("err:%v", err)
 	}
@@ -63,7 +63,7 @@ func TestCheckingTheIntegrityOfRakutenInformation(t *testing.T) {
 
 	for _, testcase := range testcases {
 		t.Run(testcase.name, func(t *testing.T) {
-			_, err := services.CheckingTheIntegrityOfRakutenInformation(testcase.ctx, testcase.userId, testcase.password)
+			_, err := usecases.CheckingTheIntegrityOfRakutenInformation(testcase.ctx, testcase.userId, testcase.password)
 			if err != nil {
 				log.Fatal(err)
 			}
